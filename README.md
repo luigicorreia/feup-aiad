@@ -1,1 +1,3 @@
-# feup-aiad
+# Description
+
+O Sistema de Emergência Médica (SEMM) é um trabalho que consiste na representação de múltiplos hospitais e na distribuição de vários pacientes por estes através de diversas ambulâncias. Cada ambulância contém uma equipa médica que deverá ser atribuída tendo em conta a distância a que se encontram do paciente e as necessidades do mesmo. O paciente, após ter sido colocado na ambulância correta, deverá ser encaminhado para o hospital para receber tratamento. Este é selecionado com base na gravidade do ferimento, na distância do paciente até ao hospital e nas especialidades que este contém.
