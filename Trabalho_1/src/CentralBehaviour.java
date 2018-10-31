@@ -1,25 +1,38 @@
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
+import jade.proto.ContractNetResponder;
 
-public class CentralBehaviour extends CyclicBehaviour{
+import java.util.Vector;
+
+public class CentralBehaviour extends ContractNetResponder{
     private Agent myAgent;
 
-    public CentralBehaviour(CentralAgent centralAgent){
-        myAgent = centralAgent;
+
+    public CentralBehaviour(Agent a, MessageTemplate cfp) {
+        super(a, cfp);
     }
 
-    public void action(){
-        ACLMessage msg = myAgent.receive();
-
-        if(msg != null) {
-            System.out.println(msg);
-            ACLMessage reply = msg.createReply();
-            reply.setPerformative(ACLMessage.INFORM);
-            reply.setContent("Got your message!");
-            myAgent.send(reply);
-        } else {
-            block();
-        }
+    protected ACLMessage handleCfp(ACLMessage cfp) {
+        ACLMessage reply = cfp.createReply();
+        reply.setPerformative(ACLMessage.PROPOSE);
+        reply.setContent("I will do it for free!!!");
+        // ...
+        return reply;
     }
+
+    protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
+        System.out.println(myAgent.getLocalName() + " got a reject...");
+    }
+
+    protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
+        System.out.println(myAgent.getLocalName() + " got an accept!");
+        ACLMessage result = accept.createReply();
+        result.setPerformative(ACLMessage.INFORM);
+        result.setContent("this is the result");
+
+        return result;
+    }
+
+
 }

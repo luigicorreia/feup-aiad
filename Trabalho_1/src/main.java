@@ -1,14 +1,10 @@
 import jade.Boot;
-import jade.core.Agent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
-
-import javax.swing.text.html.parser.DTDConstants;
-import java.io.*;
 
 public class main {
 
@@ -48,9 +44,12 @@ public class main {
         Runtime rt = Runtime.instance();
 
         AgentController hospitalController;
+        AgentController patientController;
 
         try {
             hospitalController = acHospitals.createNewAgent("central", "CentralAgent", args);
+            patientController = acPatients.createNewAgent("patient1", "PatientAgent", args);
+            patientController.start();
             hospitalController.start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
