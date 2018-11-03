@@ -1,4 +1,5 @@
 import jade.Boot;
+import jade.core.Agent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -10,13 +11,16 @@ public class main {
 
     private static AgentContainer acHospitals;
     private static AgentContainer acPatients;
+    private static AgentContainer acAmbulances;
+
     private static Profile profileHospitals;
+    private static Profile profilePatients;
+    private static Profile profileAmbulances;
 
     public static void main(String args[]){
 
         jade_initializer();
         start_world();
-
 
     }
 
@@ -32,33 +36,49 @@ public class main {
         Boot.main(container);
 
         profileHospitals = new ProfileImpl();
-        Profile profilePatients = new ProfileImpl();
+        profilePatients = new ProfileImpl();
+        profileAmbulances = new ProfileImpl();
 
-        acHospitals = rt.createAgentContainer(profileHospitals);
-        acPatients = rt.createAgentContainer(profilePatients);
+        acHospitals = rt.createAgentContainer(profileHospitals); // Hospitais Container
+        acPatients = rt.createAgentContainer(profilePatients); // Patients Container
+        acAmbulances = rt.createAgentContainer(profileAmbulances); // Ambulances Container
     }
 
     public static void start_world() {
         Object[] args = new Object[1];
 
-        Runtime rt = Runtime.instance();
+        // Hospital Agents
+        AgentController h1;
 
-        AgentController hospitalController;
-        AgentController patientController;
+        //Patient Agents
+        AgentController p1;
+
+        //Ambulance Agents
+        AgentController a1, a2;
 
         try {
-            hospitalController = acHospitals.createNewAgent("central", "CentralAgent", args);
-            patientController = acPatients.createNewAgent("patient1", "PatientAgent", args);
-            patientController.start();
-            hospitalController.start();
+            h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
+
+            p1 = acPatients.createNewAgent("p1", "PatientAgent", args); // Patient Agent
+
+            a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
+            a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
+
+            h1.start();
+
+            p1.start();
+
+            a1.start();
+            a2.start();
+
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
 
 
-
-
     }
+
+
 
 
 }
