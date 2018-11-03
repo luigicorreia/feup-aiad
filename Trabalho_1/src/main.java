@@ -12,10 +12,12 @@ public class main {
     private static AgentContainer acHospitals;
     private static AgentContainer acPatients;
     private static AgentContainer acAmbulances;
+    private static AgentContainer acCentral;
 
     private static Profile profileHospitals;
     private static Profile profilePatients;
     private static Profile profileAmbulances;
+    private static Profile profileCentral;
 
     public static void main(String args[]){
 
@@ -38,10 +40,12 @@ public class main {
         profileHospitals = new ProfileImpl();
         profilePatients = new ProfileImpl();
         profileAmbulances = new ProfileImpl();
+        profileCentral = new ProfileImpl();
 
         acHospitals = rt.createAgentContainer(profileHospitals); // Hospitais Container
         acPatients = rt.createAgentContainer(profilePatients); // Patients Container
         acAmbulances = rt.createAgentContainer(profileAmbulances); // Ambulances Container
+        acCentral = rt.createAgentContainer(profileCentral); //Central Container
     }
 
     public static void start_world() {
@@ -56,20 +60,24 @@ public class main {
         //Ambulance Agents
         AgentController a1, a2;
 
+        //Centra Agent
+        AgentController c;
+
         try {
-            h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
+           // h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
 
             p1 = acPatients.createNewAgent("p1", "PatientAgent", args); // Patient Agent
 
-            a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
-            a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
+            c = acCentral.createNewAgent("c", "CentralAgent", args);
+            //a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
+            //a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
 
-            h1.start();
+           // h1.start();
 
             p1.start();
 
-            a1.start();
-            a2.start();
+            c.start();
+            //a2.start();
 
         } catch (StaleProxyException e) {
             e.printStackTrace();
