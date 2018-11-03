@@ -60,24 +60,27 @@ public class main {
         //Ambulance Agents
         AgentController a1, a2;
 
-        //Centra Agent
+        //Central Agent
         AgentController c;
 
         try {
-           // h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
+            h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
 
             p1 = acPatients.createNewAgent("p1", "PatientAgent", args); // Patient Agent
 
             c = acCentral.createNewAgent("c", "CentralAgent", args);
-            //a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
-            //a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
 
-           // h1.start();
+            a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
+
+            a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
+
+            h1.start();
 
             p1.start();
 
             c.start();
-            //a2.start();
+
+            a2.start();
 
         } catch (StaleProxyException e) {
             e.printStackTrace();

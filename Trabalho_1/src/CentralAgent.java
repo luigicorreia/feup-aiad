@@ -38,10 +38,11 @@ public class CentralAgent extends Agent {
             ACLMessage reply = msg.createReply();
             reply.setPerformative(ACLMessage.AGREE);
             reply.setContent("ambulance on the way!");
-
-            System.out.println("ambulance on the way");
-
             return reply;
+        }
+
+        protected  ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response){
+            return response;
         }
     }
 }
