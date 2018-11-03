@@ -46,9 +46,13 @@ public class AmbulanceAgent extends Agent{
 
             try {
                 DFAgentDescription[] result = DFService.search(myAgent, template);
+
                 for(int i=0; i<result.length; ++i) {
-                    cfp.addReceiver(new AID(result[i].getName().toString(), false));
+                    System.out.println(result[i].getName().toString());
+
+                    cfp.addReceiver(result[i].getName());
                 }
+
             } catch(FIPAException fe) {
                 fe.printStackTrace();
             }
@@ -63,12 +67,18 @@ public class AmbulanceAgent extends Agent{
 
         protected void handleAllResponses(Vector responses, Vector acceptances) {
 
-          //  System.out.println("got " + responses.size() + " responses!");
+            System.out.println("got " + responses.size() + " responses!");
 
-            for(int i=0; i<responses.size(); i++) {
-                ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
-                msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL); // OR NOT!
-                acceptances.add(msg);
+            try {
+                for (int i = 0; i < responses.size(); i++) {
+                    ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
+                    System.out.println(((ACLMessage) responses.get(i)).getContent());
+                    msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL); // OR NOT!
+                    acceptances.add(msg);
+                }
+            }
+            catch (NullPointerException e) {
+                e.printStackTrace();
             }
         }
 
