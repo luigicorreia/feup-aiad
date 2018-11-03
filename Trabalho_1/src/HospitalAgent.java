@@ -29,13 +29,16 @@ public class HospitalAgent extends Agent {
 
         public HospitalBehaviour(Agent a, MessageTemplate cfp) {
             super(a, cfp);
+            myAgent = a;
         }
 
         protected ACLMessage handleCfp(ACLMessage cfp) {
-            
+
+            System.out.println("entrei");
+
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
-            reply.setContent("I will do it for free!!!");
+            reply.setContent("Got a vacancy on cardeology!");
 
             return reply;
         }
@@ -45,12 +48,20 @@ public class HospitalAgent extends Agent {
         }
 
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
-            System.out.println(myAgent.getLocalName() + " got an accept!");
-            ACLMessage result = accept.createReply();
-            result.setPerformative(ACLMessage.INFORM);
-            result.setContent("this is the result");
+            ACLMessage nullMessage = new ACLMessage();
+            try {
+                System.out.println(myAgent.getLocalName() + " got an accept!");
+                ACLMessage result = accept.createReply();
+                result.setPerformative(ACLMessage.INFORM);
+                result.setContent("this is the result");
 
-            return result;
+                return result;
+            }
+            catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            return nullMessage;
         }
+
     }
 }
