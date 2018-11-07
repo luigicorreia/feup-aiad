@@ -1,1 +1,1 @@
-http://10.227.144.189:7778/acc
+http://luigi-SATELLITE-P50-C:7778/acc
