@@ -52,36 +52,55 @@ public class main {
         Object[] args = new Object[1];
 
         // Hospital Agents
-        AgentController h1;
+        AgentController h1,h2;
 
         //Patient Agents
         AgentController p1;
 
         //Ambulance Agents
-        AgentController a1, a2;
+        AgentController a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11;
 
         //Central Agent
         AgentController c;
 
         try {
             h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
+            h2 = acHospitals.createNewAgent("h2", "HospitalAgent", args); // Hospital Agent
 
             p1 = acPatients.createNewAgent("p1", "PatientAgent", args); // Patient Agent
 
             c = acCentral.createNewAgent("c", "CentralAgent", args);
-            a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
 
+            a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
             a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
+//            a3 = acAmbulances.createNewAgent("a3", "AmbulanceAgent", args); //Ambulance Agent
+//            a4 = acAmbulances.createNewAgent("a4", "AmbulanceAgent", args); //Ambulance Agent
+//            a5 = acAmbulances.createNewAgent("a5", "AmbulanceAgent", args); //Ambulance Agent
+//            a6 = acAmbulances.createNewAgent("a6", "AmbulanceAgent", args); //Ambulance Agent
+//            a7 = acAmbulances.createNewAgent("a7", "AmbulanceAgent", args); //Ambulance Agent
+//            a8 = acAmbulances.createNewAgent("a8", "AmbulanceAgent", args); //Ambulance Agent
+//            a9 = acAmbulances.createNewAgent("a9", "AmbulanceAgent", args); //Ambulance Agent
+//            a10 = acAmbulances.createNewAgent("a10", "AmbulanceAgent", args); //Ambulance Agent
+//            a11 = acAmbulances.createNewAgent("a11", "AmbulanceAgent", args); //Ambulance Agent
 
             h1.start();
+            h2.start();
+
             c.start();
 
             p1.start();
 
-
-
             a1.start();
             a2.start();
+//            a3.start();
+//            a4.start();
+//            a5.start();
+//            a6.start();
+//            a7.start();
+//            a8.start();
+//            a9.start();
+//            a10.start();
+//            a11.start();
 
         } catch (StaleProxyException e) {
             e.printStackTrace();

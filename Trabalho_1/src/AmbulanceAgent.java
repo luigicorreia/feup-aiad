@@ -8,7 +8,9 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetInitiator;
 import jade.proto.ContractNetResponder;
+import javafx.beans.binding.IntegerBinding;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -32,20 +34,23 @@ public class AmbulanceAgent extends Agent{
         }
     }
 
+    //Behaviour Ambulance uses to communicate with Hospital
     public class AmbulanceBehaviour extends ContractNetInitiator {
         public AmbulanceBehaviour(Agent a, ACLMessage cfp) {
             super(a, cfp);
         }
+
+        //Prepares the message to send to the hospital
 
         protected Vector prepareCfps(ACLMessage cfp) {
             Vector v = new Vector();
 
             DFAgentDescription template = new DFAgentDescription();
             ServiceDescription sd = new ServiceDescription();
-            sd.setType("hospital");
+            sd.setType("hospital"); //Needs to search for hospital
             template.addServices(sd);
 
-
+            //Adds all the hospitals as receivers
             try {
                 DFAgentDescription[] result = DFService.search(myAgent, template);
                 for(int i=0; i<result.length; ++i) {
@@ -66,21 +71,50 @@ public class AmbulanceAgent extends Agent{
             return v;
         }
 
+        /*
+        * Handles the responses from the hospital
+        */
         protected void handleAllResponses(Vector responses, Vector acceptances) {
-
-            //System.out.println("got " + responses.size() + " responses!");
+            String hospitalInfo;
+            Vector<String[]> allTokens = new Vector<>();
+            int id;
 
             try {
                 for (int i = 0; i < responses.size(); i++) {
-                    ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
-                    //System.out.println(((ACLMessage) responses.get(i)).getContent());
-                    msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL); // OR NOT!
-                    acceptances.add(msg);
+
+
+                    hospitalInfo = ((ACLMessage) responses.get(i)).getContent();
+                    String[] tokens = hospitalInfo.split("-");
+                    allTokens.add(tokens);
                 }
             }
             catch (NullPointerException e) {
                 e.printStackTrace();
             }
+
+            id = analyzeInfo(allTokens);
+            ACLMessage msg = ((ACLMessage) responses.get(id)).createReply();
+            msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL); // OR NOT!
+            acceptances.add(msg);
+        }
+
+        protected int analyzeInfo(Vector<String[]> tokens) {
+
+            int min = Integer.parseInt(tokens.get(0)[2]);
+            int id = Integer.parseInt(tokens.get(0)[0]);
+
+            for(int i = 0; i < tokens.size(); i++) {
+                System.out.println(tokens.get(i)[2]);
+
+                if(Integer.parseInt(tokens.get(i)[2]) < min) {
+                    min = Integer.parseInt(tokens.get(i)[2]);
+                    id = i;
+                }
+            }
+
+            System.out.println("minimo + id" + min + id);
+
+            return id;
         }
 
         protected void handleAllResultNotifications(Vector resultNotifications) {
@@ -102,14 +136,16 @@ public class AmbulanceAgent extends Agent{
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-            int random = (int )(Math.random() * 2 + 1);
+            int random = (int )(Math.random() * 4 + 1);
 
             if (random == 1)
-                reply.setContent("heart");
+                reply.setContent("heart"); //Ambulance specialized in heart problems
             else if (random == 2)
-                reply.setContent("brain");
-
-            System.out.println(random);
+                reply.setContent("brain"); //Ambulance specialized in brain problems (like a stroke)
+            else if (random == 3)
+                reply.setContent("bones"); //Ambulance specialized in dealing with broken bones or other bone health problems
+            else if (random == 4)
+                reply.setContent("blood"); //Ambulance specialized in dealing with large hemorrhaging problems
 
             return reply;
         }

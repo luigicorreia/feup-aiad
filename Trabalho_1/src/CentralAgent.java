@@ -99,7 +99,6 @@ public class CentralAgent extends Agent {
                     String illness = ((ACLMessage) responses.get(i)).getContent();
 
                     if( illness.equals(pacientIllness)) {
-                        System.out.println(illness + pacientIllness);
                         msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
                         msg.setContent("Foste escolhido para ir buscar aquele paciente. Oupa");
                         acceptances.add(msg);
