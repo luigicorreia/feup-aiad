@@ -34,8 +34,6 @@ public class HospitalAgent extends Agent {
 
         protected ACLMessage handleCfp(ACLMessage cfp) {
 
-            System.out.println("entrei");
-
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
             reply.setContent("Got a vacancy on cardeology!");
@@ -44,13 +42,13 @@ public class HospitalAgent extends Agent {
         }
 
         protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
-            System.out.println(myAgent.getLocalName() + " got a reject...");
+            //System.out.println(myAgent.getLocalName() + " got a reject...");
         }
 
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
             ACLMessage nullMessage = new ACLMessage();
             try {
-                System.out.println(myAgent.getLocalName() + " got an accept!");
+                //System.out.println(myAgent.getLocalName() + " got an accept!");
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
                 result.setContent("this is the result");

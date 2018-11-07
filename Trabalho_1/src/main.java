@@ -69,17 +69,18 @@ public class main {
             p1 = acPatients.createNewAgent("p1", "PatientAgent", args); // Patient Agent
 
             c = acCentral.createNewAgent("c", "CentralAgent", args);
-
             a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
 
             a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
 
             h1.start();
+            c.start();
 
             p1.start();
 
-            c.start();
 
+
+            a1.start();
             a2.start();
 
         } catch (StaleProxyException e) {

@@ -48,15 +48,13 @@ public class PatientAgent extends Agent {
             try {
                 DFAgentDescription[] result = DFService.search(myAgent, template);
                 msg.addReceiver(result[0].getName());
-                System.out.println(result[0].getName().toString());
+                //System.out.println("PacientAgent search: " + result[0].getName().toString());
 
             }   catch(FIPAException fe) {
                 fe.printStackTrace();
             }
 
-            msg.setContent("need ambulance!");
-
-            System.out.println("need ambulance! I'm having a heart attack!");
+            msg.setContent("heart");
 
             v.add(msg);
 
@@ -64,7 +62,7 @@ public class PatientAgent extends Agent {
         }
 
         protected void handleAgree(ACLMessage agree) {
-            System.out.println(agree.getContent()+": thanks!!");
+            //System.out.println(agree.getContent()+" thanks!!");
         }
 /**
         protected void handleRefuse(ACLMessage refuse) {

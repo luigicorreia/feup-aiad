@@ -5,17 +5,19 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetInitiator;
+import jade.proto.ContractNetResponder;
 
+import java.util.Random;
 import java.util.Vector;
 
 public class AmbulanceAgent extends Agent{
-    private Agent myAgent;
+
 
     public void setup() {
-        myAgent = this;
-
         addBehaviour(new AmbulanceBehaviour(this, new ACLMessage(ACLMessage.CFP)));
+        addBehaviour(new CallResponseBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
 
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
@@ -46,9 +48,8 @@ public class AmbulanceAgent extends Agent{
 
             try {
                 DFAgentDescription[] result = DFService.search(myAgent, template);
-
                 for(int i=0; i<result.length; ++i) {
-                    System.out.println(result[i].getName().toString());
+                    //System.out.println("AmbulanceAgent search: " + result[i].getName().toString());
 
                     cfp.addReceiver(result[i].getName());
                 }
@@ -67,12 +68,12 @@ public class AmbulanceAgent extends Agent{
 
         protected void handleAllResponses(Vector responses, Vector acceptances) {
 
-            System.out.println("got " + responses.size() + " responses!");
+            //System.out.println("got " + responses.size() + " responses!");
 
             try {
                 for (int i = 0; i < responses.size(); i++) {
                     ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
-                    System.out.println(((ACLMessage) responses.get(i)).getContent());
+                    //System.out.println(((ACLMessage) responses.get(i)).getContent());
                     msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL); // OR NOT!
                     acceptances.add(msg);
                 }
@@ -83,8 +84,55 @@ public class AmbulanceAgent extends Agent{
         }
 
         protected void handleAllResultNotifications(Vector resultNotifications) {
-            System.out.println("got " + resultNotifications.size() + " result notifs!");
+            //System.out.println("got " + resultNotifications.size() + " result notifs!");
         }
 
+    }
+
+    public class CallResponseBehaviour extends ContractNetResponder {
+        private Agent myAgent;
+
+        public CallResponseBehaviour(Agent a, MessageTemplate mt) {
+            super(a, mt);
+            myAgent = a;
+        }
+
+        protected ACLMessage handleCfp(ACLMessage cfp) {
+
+            ACLMessage reply = cfp.createReply();
+            reply.setPerformative(ACLMessage.PROPOSE);
+
+            int random = (int )(Math.random() * 2 + 1);
+
+            if (random == 1)
+                reply.setContent("heart");
+            else if (random == 2)
+                reply.setContent("brain");
+
+            System.out.println(random);
+
+            return reply;
+        }
+
+        protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
+            System.out.println(myAgent.getLocalName() + " got a reject...");
+        }
+
+        protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
+            ACLMessage nullMessage = new ACLMessage();
+            try {
+                System.out.println(myAgent.getLocalName() + " got an accept!");
+                System.out.println(accept.getContent());
+                ACLMessage result = accept.createReply();
+                result.setPerformative(ACLMessage.INFORM);
+                result.setContent("this is the result");
+
+                return result;
+            }
+            catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            return nullMessage;
+        }
     }
 }
