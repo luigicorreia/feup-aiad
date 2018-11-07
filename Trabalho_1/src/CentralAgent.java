@@ -19,8 +19,8 @@ public class CentralAgent extends Agent {
     private String pacientIllness;
 
     public void setup(){
+        myAgent = this;
         addBehaviour(new CentralBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.REQUEST))));
-        addBehaviour(new CallBehaviour(this, new ACLMessage(ACLMessage.CFP)));
 
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
@@ -46,6 +46,8 @@ public class CentralAgent extends Agent {
         protected ACLMessage handleRequest(ACLMessage msg) {
             ACLMessage reply = msg.createReply();
             pacientIllness = msg.getContent();
+            addBehaviour(new CallBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
+            System.out.println(pacientIllness);
             reply.setPerformative(ACLMessage.AGREE);
             reply.setContent("ambulance on the way!");
             return reply;
@@ -100,7 +102,7 @@ public class CentralAgent extends Agent {
 
                     if( illness.equals(pacientIllness)) {
                         msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-                        msg.setContent("Foste escolhido para ir buscar aquele paciente. Oupa");
+                        msg.setContent("heart");
                         acceptances.add(msg);
                     }
                     else if(i+1 == responses.size()) {

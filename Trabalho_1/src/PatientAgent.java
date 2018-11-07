@@ -47,8 +47,10 @@ public class PatientAgent extends Agent {
 
             try {
                 DFAgentDescription[] result = DFService.search(myAgent, template);
-                msg.addReceiver(result[0].getName());
-                //System.out.println("PacientAgent search: " + result[0].getName().toString());
+                for(int i=0; i<result.length; ++i) {
+                    msg.addReceiver(result[i].getName());
+                }
+                System.out.println("PacientAgent search: " + result[0].getName().toString());
 
             }   catch(FIPAException fe) {
                 fe.printStackTrace();

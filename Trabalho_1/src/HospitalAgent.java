@@ -7,6 +7,8 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetResponder;
 
+import java.util.Random;
+
 public class HospitalAgent extends Agent {
     private int myAgentID = 0;
     public void setup(){
@@ -41,7 +43,28 @@ public class HospitalAgent extends Agent {
 
             int distance = (int )(Math.random() * 75 + 1);
 
-            String info = Integer.toString(myAgentID) + "-heart-" + Integer.toString(distance);
+            Random r = new Random();
+            int random = r.nextInt(4) + 1;
+            String specialty = "";
+
+            switch (random) {
+                case 1:
+                    specialty = "heart-";
+                    break;
+                case 2:
+                    specialty = "brain-";
+                    break;
+                case 3:
+                    specialty = "bones-";
+                    break;
+                case 4:
+                    specialty = "blood-";
+                    break;
+            }
+
+            String info = specialty + Integer.toString(distance);
+
+            System.out.println(myAgent.getName() + info);
 
             reply.setContent(info);
 

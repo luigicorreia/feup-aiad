@@ -52,7 +52,7 @@ public class main {
         Object[] args = new Object[1];
 
         // Hospital Agents
-        AgentController h1,h2;
+        AgentController h1,h2,h3,h4,h5;
 
         //Patient Agents
         AgentController p1;
@@ -66,6 +66,9 @@ public class main {
         try {
             h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
             h2 = acHospitals.createNewAgent("h2", "HospitalAgent", args); // Hospital Agent
+            h3 = acHospitals.createNewAgent("h3", "HospitalAgent", args); // Hospital Agent
+            h4 = acHospitals.createNewAgent("h4", "HospitalAgent", args); // Hospital Agent
+            h5 = acHospitals.createNewAgent("h5", "HospitalAgent", args); // Hospital Agent
 
             p1 = acPatients.createNewAgent("p1", "PatientAgent", args); // Patient Agent
 
@@ -83,12 +86,19 @@ public class main {
 //            a10 = acAmbulances.createNewAgent("a10", "AmbulanceAgent", args); //Ambulance Agent
 //            a11 = acAmbulances.createNewAgent("a11", "AmbulanceAgent", args); //Ambulance Agent
 
-            h1.start();
-            h2.start();
+
+
+            p1.start();
 
             c.start();
 
-            p1.start();
+
+
+            h1.start();
+            h2.start();
+            h3.start();
+            h4.start();
+            h5.start();
 
             a1.start();
             a2.start();
@@ -101,6 +111,9 @@ public class main {
 //            a9.start();
 //            a10.start();
 //            a11.start();
+
+
+
 
         } catch (StaleProxyException e) {
             e.printStackTrace();

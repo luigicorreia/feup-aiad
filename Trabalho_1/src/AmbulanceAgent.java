@@ -15,7 +15,7 @@ import java.util.Random;
 import java.util.Vector;
 
 public class AmbulanceAgent extends Agent{
-
+    String typeOfAmbulance = "";
 
     public void setup() {
         addBehaviour(new AmbulanceBehaviour(this, new ACLMessage(ACLMessage.CFP)));
@@ -84,6 +84,7 @@ public class AmbulanceAgent extends Agent{
 
 
                     hospitalInfo = ((ACLMessage) responses.get(i)).getContent();
+                    System.out.println(hospitalInfo);
                     String[] tokens = hospitalInfo.split("-");
                     allTokens.add(tokens);
                 }
@@ -100,19 +101,16 @@ public class AmbulanceAgent extends Agent{
 
         protected int analyzeInfo(Vector<String[]> tokens) {
 
-            int min = Integer.parseInt(tokens.get(0)[2]);
-            int id = Integer.parseInt(tokens.get(0)[0]);
+            int min = Integer.parseInt(tokens.get(0)[1]);
+            int id = 0;
 
             for(int i = 0; i < tokens.size(); i++) {
-                System.out.println(tokens.get(i)[2]);
 
-                if(Integer.parseInt(tokens.get(i)[2]) < min) {
-                    min = Integer.parseInt(tokens.get(i)[2]);
+                if(Integer.parseInt(tokens.get(i)[1]) < min && typeOfAmbulance.equals(tokens.get(i)[0]) ) {
+                    min = Integer.parseInt(tokens.get(i)[1]);
                     id = i;
                 }
             }
-
-            System.out.println("minimo + id" + min + id);
 
             return id;
         }
@@ -136,16 +134,23 @@ public class AmbulanceAgent extends Agent{
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-            int random = (int )(Math.random() * 4 + 1);
+            Random r = new Random();
+            int random = r.nextInt(4) + 1;
 
-            if (random == 1)
-                reply.setContent("heart"); //Ambulance specialized in heart problems
-            else if (random == 2)
-                reply.setContent("brain"); //Ambulance specialized in brain problems (like a stroke)
-            else if (random == 3)
-                reply.setContent("bones"); //Ambulance specialized in dealing with broken bones or other bone health problems
-            else if (random == 4)
-                reply.setContent("blood"); //Ambulance specialized in dealing with large hemorrhaging problems
+            switch(random) {
+                case 1:
+                    reply.setContent("heart"); //Ambulance specialized in heart problems
+                    break;
+                case 2:
+                    reply.setContent("brain"); //Ambulance specialized in brain problems (like a stroke)
+                    break;
+                case 3:
+                    reply.setContent("bones"); //Ambulance specialized in dealing with broken bones or other bone health problems
+                    break;
+                case 4:
+                    reply.setContent("blood"); //Ambulance specialized in dealing with large hemorrhaging problems
+                    break;
+            }
 
             return reply;
         }
@@ -158,7 +163,7 @@ public class AmbulanceAgent extends Agent{
             ACLMessage nullMessage = new ACLMessage();
             try {
                 System.out.println(myAgent.getLocalName() + " got an accept!");
-                System.out.println(accept.getContent());
+                typeOfAmbulance = accept.getContent();
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
                 result.setContent("this is the result");
