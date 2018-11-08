@@ -50,7 +50,7 @@ public class PatientAgent extends Agent {
                 for(int i=0; i<result.length; ++i) {
                     msg.addReceiver(result[i].getName());
                 }
-                System.out.println("PacientAgent search: " + result[0].getName().toString());
+                System.out.println("Pacient asking for help. Heart problem");
 
             }   catch(FIPAException fe) {
                 fe.printStackTrace();

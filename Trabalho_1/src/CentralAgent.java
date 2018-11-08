@@ -47,7 +47,7 @@ public class CentralAgent extends Agent {
             ACLMessage reply = msg.createReply();
             pacientIllness = msg.getContent();
             addBehaviour(new CallBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
-            System.out.println(pacientIllness);
+            System.out.println("Central received call.");
             reply.setPerformative(ACLMessage.AGREE);
             reply.setContent("ambulance on the way!");
             return reply;
@@ -83,6 +83,7 @@ public class CentralAgent extends Agent {
                 fe.printStackTrace();
             }
 
+            System.out.println("Sending ambulance request");
 
             cfp.setContent("need an ambulance");
 
@@ -93,7 +94,7 @@ public class CentralAgent extends Agent {
 
         protected void handleAllResponses(Vector responses, Vector acceptances) {
 
-            System.out.println("got " + responses.size() + " responses!");
+            System.out.println("Central got " + responses.size() + " responses!");
 
             try {
                 for (int i = 0; i < responses.size(); i++) {
