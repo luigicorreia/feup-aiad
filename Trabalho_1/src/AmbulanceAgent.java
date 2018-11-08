@@ -98,8 +98,6 @@ public class AmbulanceAgent extends Agent{
 
             try {
                 for (int i = 0; i < responses.size(); i++) {
-
-
                     hospitalInfo = ((ACLMessage) responses.get(i)).getContent();
                     System.out.println(hospitalInfo);
                     String[] tokens = hospitalInfo.split("-");
@@ -122,8 +120,8 @@ public class AmbulanceAgent extends Agent{
             int id = 0;
 
             for(int i = 0; i < tokens.size(); i++) {
-
-                if(Integer.parseInt(tokens.get(i)[1]) < min && typeOfAmbulance.equals(tokens.get(i)[0]) ) {
+                int num = Integer.parseInt(tokens.get(i)[1]);
+                if(num < min && typeOfAmbulance.equals(tokens.get(i)[0]) ) {
                     min = Integer.parseInt(tokens.get(i)[1]);
                     id = i;
                 }
@@ -151,9 +149,11 @@ public class AmbulanceAgent extends Agent{
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-            reply.setContent(typeOfAmbulance);
+            int distance = (int )(Math.random() * 75 + 1);
 
-            System.out.println("Ambulance received call from central. Replying with specialty: " + typeOfAmbulance);
+            String info = typeOfAmbulance + "-" + distance;
+            System.out.println(myAgent.getName() + " " + info);
+            reply.setContent(info);
 
             return reply;
         }
@@ -166,7 +166,6 @@ public class AmbulanceAgent extends Agent{
             ACLMessage nullMessage = new ACLMessage();
             try {
                 System.out.println(myAgent.getLocalName() + " got an accept!");
-                typeOfAmbulance = accept.getContent();
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
                 result.setContent("this is the result");
