@@ -36,31 +36,18 @@ public class AmbulanceAgent extends Agent{
         Random r = new Random();
         int random = r.nextInt(4) + 1;
 
-        /* TESTE */
-        System.out.println("");
-        System.out.println("* TESTE * random para ambulancia é: " + random);
-        System.out.println("");
-
         switch(random) {
             case 1:
-                System.out.println("teste.1");
                 typeOfAmbulance = "heart"; //Ambulance specialized in heart problems
-                System.out.println(typeOfAmbulance);
                 break;
             case 2:
-                System.out.println("teste.2");
                 typeOfAmbulance = "brain"; //Ambulance specialized in brain problems (like a stroke)
-                System.out.println(typeOfAmbulance);
                 break;
             case 3:
-                System.out.println("teste.3");
                 typeOfAmbulance = "bones"; //Ambulance specialized in dealing with broken bones or other bone health problems
-                System.out.println(typeOfAmbulance);
                 break;
             case 4:
-                System.out.println("teste.4");
                 typeOfAmbulance = "blood"; //Ambulance specialized in dealing with large hemorrhaging problems
-                System.out.println(typeOfAmbulance);
                 break;
         }
     }
@@ -111,12 +98,11 @@ public class AmbulanceAgent extends Agent{
 
             try {
                 for (int i = 0; i < responses.size(); i++) {
+
+
                     hospitalInfo = ((ACLMessage) responses.get(i)).getContent();
-
                     System.out.println(hospitalInfo);
-
                     String[] tokens = hospitalInfo.split("-");
-
                     allTokens.add(tokens);
                 }
             }
@@ -131,15 +117,11 @@ public class AmbulanceAgent extends Agent{
         }
 
         protected int analyzeInfo(Vector<String[]> tokens) {
+
             int min = 100;
             int id = 0;
 
             for(int i = 0; i < tokens.size(); i++) {
-                /*TESTE*/
-                System.out.println("");
-                System.out.println("["+tokens.get(i)[0]+","+tokens.get(i)[1]+"]");
-                System.out.println(typeOfAmbulance);
-                System.out.println("");
 
                 if(Integer.parseInt(tokens.get(i)[1]) < min && typeOfAmbulance.equals(tokens.get(i)[0]) ) {
                     min = Integer.parseInt(tokens.get(i)[1]);
@@ -169,18 +151,9 @@ public class AmbulanceAgent extends Agent{
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-            int distance = (int )(Math.random() * 75 + 1);
+            reply.setContent(typeOfAmbulance);
 
-            /* TESTE */
-            System.out.println("");
-            System.out.println("* TESTE * A distancia é " + distance);
-            System.out.println("");
-
-            String info = typeOfAmbulance + "-" + distance;
-
-            reply.setContent(info);
-
-            //System.out.println("Ambulance received call from central. Replying with specialty: " + typeOfAmbulance);
+            System.out.println("Ambulance received call from central. Replying with specialty: " + typeOfAmbulance);
 
             return reply;
         }
