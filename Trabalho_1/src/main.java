@@ -26,6 +26,9 @@ public class main {
 
     }
 
+    /**
+     * to create the containers
+     */
     public static void jade_initializer() {
         Runtime rt = Runtime.instance();
 
@@ -48,6 +51,9 @@ public class main {
         acCentral = rt.createAgentContainer(profileCentral); //Central Container
     }
 
+    /**
+     * to create the agents
+     */
     public static void start_world() {
         Object[] args = new Object[1];
 

@@ -1,3 +1,4 @@
+import com.sun.javafx.binding.StringFormatter;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -72,7 +73,6 @@ public class CentralAgent extends Agent {
             sd.setType("ambulance");
             template.addServices(sd);
 
-
             try {
                 DFAgentDescription[] result = DFService.search(myAgent, template);
                 for(int i=0; i<result.length; ++i) {
@@ -96,12 +96,23 @@ public class CentralAgent extends Agent {
 
             System.out.println("Central got " + responses.size() + " responses!");
 
+            Vector<String[]> allTokens = new Vector<>();
+
             try {
                 for (int i = 0; i < responses.size(); i++) {
                     ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
-                    String illness = ((ACLMessage) responses.get(i)).getContent();
+                    String ambulanceResponse = ((ACLMessage) responses.get(i)).getContent();
 
-                    if( illness.equals(pacientIllness)) {
+                    /* teste */
+                    System.out.println("");
+                    System.out.println("* TESTE * MSG AMBULACIA : " + ambulanceResponse);
+                    System.out.println("");
+
+                    String[] tokens = ambulanceResponse.split("-");
+                    allTokens.add(tokens);
+
+                    /*
+                    if( ambulanceRespotnse.equals(pacientIllness)) {
                         msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
                         msg.setContent("heart");
                         acceptances.add(msg);
@@ -110,15 +121,37 @@ public class CentralAgent extends Agent {
                         msg.setPerformative(ACLMessage.REJECT_PROPOSAL);
                         acceptances.add(msg);
                     }
+                    */
                 }
             }
             catch (NullPointerException e) {
                 e.printStackTrace();
             }
+
+            int id;
+            id = analyzeAmbulanceResponse(allTokens);
+
+            ACLMessage msg = ((ACLMessage) responses.get(id)).createReply();
+            msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+            acceptances.add(msg);
         }
 
         protected void handleAllResultNotifications(Vector resultNotifications) {
             System.out.println("got " + resultNotifications.size() + " result notifs!");
+        }
+
+        protected int analyzeAmbulanceResponse(Vector<String[]> allTokens){
+            int min = 100;
+            int id = 0;
+
+            for(int i = 0; i < allTokens.size(); i++) {
+                if (Integer.parseInt(allTokens.get(i)[1]) < min && pacientIllness.equals(allTokens.get(i)[0])) {
+                    min = Integer.parseInt(allTokens.get(i)[1]);
+                    id = i;
+                }
+            }
+
+            return id;
         }
 
     }
