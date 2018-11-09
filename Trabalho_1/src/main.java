@@ -76,8 +76,8 @@ public class main {
 
             a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
             a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
-//            a3 = acAmbulances.createNewAgent("a3", "AmbulanceAgent", args); //Ambulance Agent
-//            a4 = acAmbulances.createNewAgent("a4", "AmbulanceAgent", args); //Ambulance Agent
+            a3 = acAmbulances.createNewAgent("a3", "AmbulanceAgent", args); //Ambulance Agent
+            a4 = acAmbulances.createNewAgent("a4", "AmbulanceAgent", args); //Ambulance Agent
 //            a5 = acAmbulances.createNewAgent("a5", "AmbulanceAgent", args); //Ambulance Agent
 //            a6 = acAmbulances.createNewAgent("a6", "AmbulanceAgent", args); //Ambulance Agent
 //            a7 = acAmbulances.createNewAgent("a7", "AmbulanceAgent", args); //Ambulance Agent
@@ -102,8 +102,8 @@ public class main {
 
             a1.start();
             a2.start();
-//            a3.start();
-//            a4.start();
+            a3.start();
+            a4.start();
 //            a5.start();
 //            a6.start();
 //            a7.start();

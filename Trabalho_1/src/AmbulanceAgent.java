@@ -32,6 +32,24 @@ public class AmbulanceAgent extends Agent{
         } catch(FIPAException fe) {
             fe.printStackTrace();
         }
+
+        Random r = new Random();
+        int random = r.nextInt(4) + 1;
+
+        switch(random) {
+            case 1:
+                typeOfAmbulance = "heart"; //Ambulance specialized in heart problems
+                break;
+            case 2:
+                typeOfAmbulance = "brain"; //Ambulance specialized in brain problems (like a stroke)
+                break;
+            case 3:
+                typeOfAmbulance = "bones"; //Ambulance specialized in dealing with broken bones or other bone health problems
+                break;
+            case 4:
+                typeOfAmbulance = "blood"; //Ambulance specialized in dealing with large hemorrhaging problems
+                break;
+        }
     }
 
     //Behaviour Ambulance uses to communicate with Hospital
@@ -54,7 +72,6 @@ public class AmbulanceAgent extends Agent{
             try {
                 DFAgentDescription[] result = DFService.search(myAgent, template);
                 for(int i=0; i<result.length; ++i) {
-                    //System.out.println("AmbulanceAgent search: " + result[i].getName().toString());
 
                     cfp.addReceiver(result[i].getName());
                 }
@@ -63,7 +80,7 @@ public class AmbulanceAgent extends Agent{
                 fe.printStackTrace();
             }
 
-
+            System.out.println("looking for hospitals");
             cfp.setContent("need a hospital");
 
             v.add(cfp);
@@ -81,8 +98,6 @@ public class AmbulanceAgent extends Agent{
 
             try {
                 for (int i = 0; i < responses.size(); i++) {
-
-
                     hospitalInfo = ((ACLMessage) responses.get(i)).getContent();
                     System.out.println(hospitalInfo);
                     String[] tokens = hospitalInfo.split("-");
@@ -95,18 +110,18 @@ public class AmbulanceAgent extends Agent{
 
             id = analyzeInfo(allTokens);
             ACLMessage msg = ((ACLMessage) responses.get(id)).createReply();
-            msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL); // OR NOT!
+            msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
             acceptances.add(msg);
         }
 
         protected int analyzeInfo(Vector<String[]> tokens) {
 
-            int min = Integer.parseInt(tokens.get(0)[1]);
+            int min = 100;
             int id = 0;
 
             for(int i = 0; i < tokens.size(); i++) {
-
-                if(Integer.parseInt(tokens.get(i)[1]) < min && typeOfAmbulance.equals(tokens.get(i)[0]) ) {
+                int num = Integer.parseInt(tokens.get(i)[1]);
+                if(num < min && typeOfAmbulance.equals(tokens.get(i)[0]) ) {
                     min = Integer.parseInt(tokens.get(i)[1]);
                     id = i;
                 }
@@ -134,23 +149,11 @@ public class AmbulanceAgent extends Agent{
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-            Random r = new Random();
-            int random = r.nextInt(4) + 1;
+            int distance = (int )(Math.random() * 75 + 1);
 
-            switch(random) {
-                case 1:
-                    reply.setContent("heart"); //Ambulance specialized in heart problems
-                    break;
-                case 2:
-                    reply.setContent("brain"); //Ambulance specialized in brain problems (like a stroke)
-                    break;
-                case 3:
-                    reply.setContent("bones"); //Ambulance specialized in dealing with broken bones or other bone health problems
-                    break;
-                case 4:
-                    reply.setContent("blood"); //Ambulance specialized in dealing with large hemorrhaging problems
-                    break;
-            }
+            String info = typeOfAmbulance + "-" + distance;
+            System.out.println(myAgent.getName() + " " + info);
+            reply.setContent(info);
 
             return reply;
         }
@@ -163,7 +166,6 @@ public class AmbulanceAgent extends Agent{
             ACLMessage nullMessage = new ACLMessage();
             try {
                 System.out.println(myAgent.getLocalName() + " got an accept!");
-                typeOfAmbulance = accept.getContent();
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
                 result.setContent("this is the result");
