@@ -16,7 +16,7 @@ import java.util.Vector;
 
 public class CentralAgent extends Agent {
     private Agent myAgent;
-    private String pacientIllness;
+    private String patientIllness;
 
     public void setup(){
         myAgent = this;
@@ -45,7 +45,7 @@ public class CentralAgent extends Agent {
 
         protected ACLMessage handleRequest(ACLMessage msg) {
             ACLMessage reply = msg.createReply();
-            pacientIllness = msg.getContent();
+            patientIllness = msg.getContent();
             addBehaviour(new CallBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
             System.out.println("Central received call.");
             reply.setPerformative(ACLMessage.AGREE);
@@ -85,7 +85,7 @@ public class CentralAgent extends Agent {
 
             System.out.println("Sending ambulance request");
 
-            cfp.setContent("need an ambulance");
+            cfp.setContent(patientIllness);
 
             v.add(cfp);
 
@@ -128,7 +128,7 @@ public class CentralAgent extends Agent {
             int id2op = 0;
 
             for(int i = 0; i < tokens.size(); i++) {
-                if(Integer.parseInt(tokens.get(i)[1]) < min && pacientIllness.equals(tokens.get(i)[0]) ) {
+                if(Integer.parseInt(tokens.get(i)[1]) < min && patientIllness.equals(tokens.get(i)[0]) ) {
                     min = Integer.parseInt(tokens.get(i)[1]);
                     id = i;
                 }

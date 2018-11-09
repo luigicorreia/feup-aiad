@@ -8,7 +8,6 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetInitiator;
 import jade.proto.ContractNetResponder;
-import javafx.beans.binding.IntegerBinding;
 
 import java.util.List;
 import java.util.Random;
@@ -16,6 +15,7 @@ import java.util.Vector;
 
 public class AmbulanceAgent extends Agent{
     String typeOfAmbulance = "";
+    String illness;
 
     public void setup() {
         addBehaviour(new CallResponseBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
@@ -123,7 +123,7 @@ public class AmbulanceAgent extends Agent{
 
             for(int i = 0; i < tokens.size(); i++) {
                 int num = Integer.parseInt(tokens.get(i)[1]);
-                if(num < min && typeOfAmbulance.equals(tokens.get(i)[0]) ) {
+                if(num < min && illness.equals(tokens.get(i)[0]) ) {
                     min = Integer.parseInt(tokens.get(i)[1]);
                     id = i;
                 }
@@ -156,6 +156,7 @@ public class AmbulanceAgent extends Agent{
 
         protected ACLMessage handleCfp(ACLMessage cfp) {
 
+            illness = cfp.getContent();
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
