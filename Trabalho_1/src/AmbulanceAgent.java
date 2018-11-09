@@ -18,8 +18,8 @@ public class AmbulanceAgent extends Agent{
     String typeOfAmbulance = "";
 
     public void setup() {
-        addBehaviour(new AmbulanceBehaviour(this, new ACLMessage(ACLMessage.CFP)));
         addBehaviour(new CallResponseBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
+
 
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
@@ -117,7 +117,9 @@ public class AmbulanceAgent extends Agent{
         protected int analyzeInfo(Vector<String[]> tokens) {
 
             int min = 100;
-            int id = 0;
+            int id = -1;
+            int min2op = 100;
+            int id2op = 0;
 
             for(int i = 0; i < tokens.size(); i++) {
                 int num = Integer.parseInt(tokens.get(i)[1]);
@@ -125,6 +127,14 @@ public class AmbulanceAgent extends Agent{
                     min = Integer.parseInt(tokens.get(i)[1]);
                     id = i;
                 }
+                if(num < min2op){
+                    min2op = Integer.parseInt(tokens.get(i)[1]);
+                    id2op = i;
+                }
+            }
+
+            if(id == -1){
+                id = id2op;
             }
 
             return id;
@@ -166,6 +176,7 @@ public class AmbulanceAgent extends Agent{
             ACLMessage nullMessage = new ACLMessage();
             try {
                 System.out.println(myAgent.getLocalName() + " got an accept!");
+                addBehaviour(new AmbulanceBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
                 result.setContent("this is the result");
