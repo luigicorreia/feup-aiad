@@ -15,6 +15,7 @@ import java.util.Vector;
  */
 public class PatientAgent extends Agent {
     private Agent myAgent;
+    private String patientIllness = "";
 
     public void setup(){
 
@@ -32,6 +33,27 @@ public class PatientAgent extends Agent {
             DFService.register(this, dfd);
         } catch(FIPAException fe) {
             fe.printStackTrace();
+        }
+        generateIllness();
+    }
+
+    protected void generateIllness() {
+        Random r = new Random();
+        int random = r.nextInt(4) + 1;
+
+        switch(random) {
+            case 1:
+                patientIllness = "heart"; //Ambulance specialized in heart problems
+                break;
+            case 2:
+                patientIllness = "brain"; //Ambulance specialized in brain problems (like a stroke)
+                break;
+            case 3:
+                patientIllness = "bones"; //Ambulance specialized in dealing with broken bones or other bone health problems
+                break;
+            case 4:
+                patientIllness = "blood"; //Ambulance specialized in dealing with large hemorrhaging problems
+                break;
         }
     }
 
@@ -60,7 +82,7 @@ public class PatientAgent extends Agent {
                 fe.printStackTrace();
             }
 
-            msg.setContent("heart");
+            msg.setContent(patientIllness);
 
             v.add(msg);
 
