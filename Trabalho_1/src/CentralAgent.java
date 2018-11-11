@@ -1,6 +1,4 @@
-import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -10,8 +8,6 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 import jade.proto.ContractNetInitiator;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -146,6 +142,9 @@ public class CentralAgent extends Agent {
 
             Vector<String[]> allTokens = new Vector<>();
 
+            System.out.println("");
+            System.out.println("Information about the available ambulances: ");
+
             try {
                 for (int i = 0; i < responses.size(); i++) {
                     ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
@@ -155,14 +154,15 @@ public class CentralAgent extends Agent {
                     String[] tokens = ambulanceResponse.split("-");
                     allTokens.add(tokens);
 
-                    //separar tipo de ambulancia e distancia
-                    //colocar num AMbulacia + tipo de ambulancia + distancia
-                    System.out.println(ambulanceResponse);
+                    System.out.println(" > Ambulance " + (i+1) + " is specialist in " + tokens[0] + " and the " +
+                            "patient's distance is " + tokens[1] + " km");
                 }
             }
             catch (NullPointerException e) {
                 e.printStackTrace();
             }
+
+            System.out.println("");
 
             int id = analyzeInfo(allTokens);
             ACLMessage msg = ((ACLMessage) responses.get(id)).createReply();
@@ -171,7 +171,15 @@ public class CentralAgent extends Agent {
         }
 
         protected void handleAllResultNotifications(Vector resultNotifications) {
-            System.out.println("got " + resultNotifications.size() + " result notifs!");
+            if (resultNotifications.size() < 1){
+                System.out.println("");
+                System.out.println("Central got " + resultNotifications.size() + " result notifications!");
+                System.out.println("");
+            }else {
+                System.out.println("");
+                System.out.println("Central got " + resultNotifications.size() + " result notification!");
+                System.out.println("");
+            }
         }
 
         protected int analyzeInfo(Vector<String[]> tokens) {
