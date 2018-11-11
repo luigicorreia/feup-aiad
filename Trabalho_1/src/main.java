@@ -7,6 +7,11 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
+
+/**
+ * The main class allows initializing the program and
+ *  * create/change the Agents Patient, Central, Ambulance and Hospital.
+ */
 public class main {
 
     private static AgentContainer acHospitals;
@@ -20,12 +25,14 @@ public class main {
     private static Profile profileCentral;
 
     public static void main(String args[]){
-
         jade_initializer();
-        start_world();
 
+        start_world();
     }
 
+    /**
+     * This function initialize JADE interface and create the all the containers we need.
+     */
     public static void jade_initializer() {
         Runtime rt = Runtime.instance();
 
@@ -42,87 +49,87 @@ public class main {
         profileAmbulances = new ProfileImpl();
         profileCentral = new ProfileImpl();
 
-        acHospitals = rt.createAgentContainer(profileHospitals); // Hospitais Container
-        acPatients = rt.createAgentContainer(profilePatients); // Patients Container
-        acAmbulances = rt.createAgentContainer(profileAmbulances); // Ambulances Container
-        acCentral = rt.createAgentContainer(profileCentral); //Central Container
+        // Hospitals Container
+        acHospitals = rt.createAgentContainer(profileHospitals);
+
+        // Patients Container
+        acPatients = rt.createAgentContainer(profilePatients);
+
+        // Ambulances Container
+        acAmbulances = rt.createAgentContainer(profileAmbulances);
+
+        //Central Container
+        acCentral = rt.createAgentContainer(profileCentral);
     }
 
+    /**
+     * This function create and initialize all the agents
+     */
     public static void start_world() {
         Object[] args = new Object[1];
 
         // Hospital Agents
-        AgentController h1,h2,h3,h4,h5;
+        AgentController H1, H2, H3, H4, H5;
 
         //Patient Agents
-        AgentController p1;
+        AgentController P1;
 
         //Ambulance Agents
-        AgentController a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11;
+        AgentController A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11;
 
         //Central Agent
-        AgentController c;
+        AgentController C;
 
         try {
-            h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
-            h2 = acHospitals.createNewAgent("h2", "HospitalAgent", args); // Hospital Agent
-            h3 = acHospitals.createNewAgent("h3", "HospitalAgent", args); // Hospital Agent
-            h4 = acHospitals.createNewAgent("h4", "HospitalAgent", args); // Hospital Agent
-            h5 = acHospitals.createNewAgent("h5", "HospitalAgent", args); // Hospital Agent
+            // Patient Agent
+            P1 = acPatients.createNewAgent("P1", "PatientAgent", args);
 
-            p1 = acPatients.createNewAgent("p1", "PatientAgent", args); // Patient Agent
+            // Central Agent
+            C = acCentral.createNewAgent("C", "CentralAgent", args);
 
-            c = acCentral.createNewAgent("c", "CentralAgent", args);
+            // HospitalS Agent
+            H1 = acHospitals.createNewAgent("H1", "HospitalAgent", args);
+            H2 = acHospitals.createNewAgent("H2", "HospitalAgent", args);
+            H3 = acHospitals.createNewAgent("H3", "HospitalAgent", args);
+            H4 = acHospitals.createNewAgent("H4", "HospitalAgent", args);
+            H5 = acHospitals.createNewAgent("H5", "HospitalAgent", args);
 
-            a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
-            a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
-            a3 = acAmbulances.createNewAgent("a3", "AmbulanceAgent", args); //Ambulance Agent
-            a4 = acAmbulances.createNewAgent("a4", "AmbulanceAgent", args); //Ambulance Agent
-//            a5 = acAmbulances.createNewAgent("a5", "AmbulanceAgent", args); //Ambulance Agent
-//            a6 = acAmbulances.createNewAgent("a6", "AmbulanceAgent", args); //Ambulance Agent
-//            a7 = acAmbulances.createNewAgent("a7", "AmbulanceAgent", args); //Ambulance Agent
-//            a8 = acAmbulances.createNewAgent("a8", "AmbulanceAgent", args); //Ambulance Agent
-//            a9 = acAmbulances.createNewAgent("a9", "AmbulanceAgent", args); //Ambulance Agent
-//            a10 = acAmbulances.createNewAgent("a10", "AmbulanceAgent", args); //Ambulance Agent
-//            a11 = acAmbulances.createNewAgent("a11", "AmbulanceAgent", args); //Ambulance Agent
+            //Ambulances Agent
+            A1 = acAmbulances.createNewAgent("A1", "AmbulanceAgent", args);
+            A2 = acAmbulances.createNewAgent("A2", "AmbulanceAgent", args);
+            A3 = acAmbulances.createNewAgent("A3", "AmbulanceAgent", args);
+            A4 = acAmbulances.createNewAgent("A4", "AmbulanceAgent", args);
+//            A5 = acAmbulances.createNewAgent("A5", "AmbulanceAgent", args); //Ambulance Agent
+//            A6 = acAmbulances.createNewAgent("A6", "AmbulanceAgent", args); //Ambulance Agent
+//            A7 = acAmbulances.createNewAgent("A7", "AmbulanceAgent", args); //Ambulance Agent
+//            A8 = acAmbulances.createNewAgent("A8", "AmbulanceAgent", args); //Ambulance Agent
+//            A9 = acAmbulances.createNewAgent("A9", "AmbulanceAgent", args); //Ambulance Agent
+//            A10 = acAmbulances.createNewAgent("A10", "AmbulanceAgent", args); //Ambulance Agent
+//            A11 = acAmbulances.createNewAgent("A11", "AmbulanceAgent", args); //Ambulance Agent
 
+            P1.start();
 
+            C.start();
 
-            p1.start();
+            H1.start();
+            H2.start();
+            H3.start();
+            H4.start();
+            H5.start();
 
-            c.start();
-
-
-
-            h1.start();
-            h2.start();
-            h3.start();
-            h4.start();
-            h5.start();
-
-            a1.start();
-            a2.start();
-            a3.start();
-            a4.start();
-//            a5.start();
-//            a6.start();
-//            a7.start();
-//            a8.start();
-//            a9.start();
-//            a10.start();
-//            a11.start();
-
-
-
-
+            A1.start();
+            A2.start();
+            A3.start();
+            A4.start();
+//            A5.start();
+//            A6.start();
+//            A7.start();
+//            A8.start();
+//            A9.start();
+//            A10.start();
+//            A11.start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
-
-
 }
