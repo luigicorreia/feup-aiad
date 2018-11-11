@@ -1,6 +1,4 @@
-import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -11,8 +9,6 @@ import jade.proto.AchieveREResponder;
 import jade.proto.ContractNetInitiator;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 public class CentralAgent extends Agent {

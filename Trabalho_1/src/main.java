@@ -7,6 +7,8 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
+import java.util.Vector;
+
 public class main {
 
     private static AgentContainer acHospitals;
@@ -50,18 +52,20 @@ public class main {
 
     public static void start_world() {
         Object[] args = new Object[1];
+        PatientControl pc = new PatientControl();
 
         // Hospital Agents
-        AgentController h1,h2,h3,h4,h5;
+        AgentController h1,h2,h3,h4,h5, h6, h7, h8, h9, h10;
 
         //Patient Agents
         AgentController p1, p2, p3, p4;
+
 
         //Ambulance Agents
         AgentController a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11;
 
         //Central Agent
-        AgentController c;
+        AgentController c1, c2;
 
         try {
             h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
@@ -69,6 +73,13 @@ public class main {
             h3 = acHospitals.createNewAgent("h3", "HospitalAgent", args); // Hospital Agent
             h4 = acHospitals.createNewAgent("h4", "HospitalAgent", args); // Hospital Agent
             h5 = acHospitals.createNewAgent("h5", "HospitalAgent", args); // Hospital Agent
+            h6 = acHospitals.createNewAgent("h6", "HospitalAgent", args); // Hospital Agent
+            h7 = acHospitals.createNewAgent("h7", "HospitalAgent", args); // Hospital Agent
+            h8 = acHospitals.createNewAgent("h8", "HospitalAgent", args); // Hospital Agent
+            h9 = acHospitals.createNewAgent("h9", "HospitalAgent", args); // Hospital Agent
+            h10 = acHospitals.createNewAgent("h10", "HospitalAgent", args); // Hospital Agent
+
+
 
             p1 = acPatients.createNewAgent("p1", "PatientAgent", args); // Patient Agent
             p2 = acPatients.createNewAgent("p2", "PatientAgent", args); // Patient Agent
@@ -76,28 +87,22 @@ public class main {
             p4 = acPatients.createNewAgent("p4", "PatientAgent", args); // Patient Agent
 
 
-            c = acCentral.createNewAgent("c", "CentralAgent", args);
+            c1 = acCentral.createNewAgent("c", "CentralAgent", args);
 
             a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
             a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
             a3 = acAmbulances.createNewAgent("a3", "AmbulanceAgent", args); //Ambulance Agent
             a4 = acAmbulances.createNewAgent("a4", "AmbulanceAgent", args); //Ambulance Agent
-//            a5 = acAmbulances.createNewAgent("a5", "AmbulanceAgent", args); //Ambulance Agent
-//            a6 = acAmbulances.createNewAgent("a6", "AmbulanceAgent", args); //Ambulance Agent
-//            a7 = acAmbulances.createNewAgent("a7", "AmbulanceAgent", args); //Ambulance Agent
-//            a8 = acAmbulances.createNewAgent("a8", "AmbulanceAgent", args); //Ambulance Agent
-//            a9 = acAmbulances.createNewAgent("a9", "AmbulanceAgent", args); //Ambulance Agent
-//            a10 = acAmbulances.createNewAgent("a10", "AmbulanceAgent", args); //Ambulance Agent
-//            a11 = acAmbulances.createNewAgent("a11", "AmbulanceAgent", args); //Ambulance Agent
+            a5 = acAmbulances.createNewAgent("a5", "AmbulanceAgent", args); //Ambulance Agent
+            a6 = acAmbulances.createNewAgent("a6", "AmbulanceAgent", args); //Ambulance Agent
+            a7 = acAmbulances.createNewAgent("a7", "AmbulanceAgent", args); //Ambulance Agent
+            a8 = acAmbulances.createNewAgent("a8", "AmbulanceAgent", args); //Ambulance Agent
+            a9 = acAmbulances.createNewAgent("a9", "AmbulanceAgent", args); //Ambulance Agent
+            a10 = acAmbulances.createNewAgent("a10", "AmbulanceAgent", args); //Ambulance Agent
+            a11 = acAmbulances.createNewAgent("a11", "AmbulanceAgent", args); //Ambulance Agent
 
 
-
-            p1.start();
-            p2.start();
-            p3.start();
-            p4.start();
-
-            c.start();
+            c1.start();
 
 
 
@@ -120,6 +125,15 @@ public class main {
 //            a11.start();
 
 
+            Vector<AgentController> patients = new Vector();
+
+            patients.add(p1);
+            patients.add(p2);
+
+            pc.schedulePatient(patients);
+//            p2.start();
+//            p3.start();
+//            p4.start();
 
 
         } catch (StaleProxyException e) {
