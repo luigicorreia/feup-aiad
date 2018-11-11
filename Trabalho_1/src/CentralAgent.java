@@ -14,20 +14,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * This class represents the Central of Emergency.
+ * From here we can communicate with others agents,
+ * like the central receive the help request from
+ * Patient and send an ambulance to catch him to
+ * take a hospital.
+ */
 public class CentralAgent extends Agent {
     private Agent myAgent;
     private String patientIllness;
 
+    /**
+     * This function prepare the Central Agent.
+     */
     public void setup(){
         myAgent = this;
         addBehaviour(new CentralBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.REQUEST))));
 
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
+
         ServiceDescription sd = new ServiceDescription();
         sd.setType("central");
         sd.setName(getLocalName());
+
         dfd.addServices(sd);
+
         try {
             DFService.register(this, dfd);
         } catch(FIPAException fe) {
@@ -39,20 +52,43 @@ public class CentralAgent extends Agent {
 
     public class CentralBehaviour extends AchieveREResponder {
 
+        /**
+         *
+         * @param a - represent the central agent
+         * @param msg - represent the message from other agent
+         */
         public CentralBehaviour(Agent a, MessageTemplate msg){
             super(a, msg);
         }
 
+        /**
+         *
+         * @param msg - message received
+         * @return reply - answer from ambulance
+         */
         protected ACLMessage handleRequest(ACLMessage msg) {
             ACLMessage reply = msg.createReply();
+
             patientIllness = msg.getContent();
+
             addBehaviour(new CallBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
+
+            System.out.println("");
             System.out.println("Central received call.");
+            System.out.println("");
+
             reply.setPerformative(ACLMessage.AGREE);
             reply.setContent("ambulance on the way!");
+
             return reply;
         }
 
+        /**
+         *
+         * @param request - patient illness
+         * @param response - from an ambulance on the way
+         * @return
+         */
         protected  ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
             return response;
         }
@@ -60,10 +96,20 @@ public class CentralAgent extends Agent {
 
     public class CallBehaviour extends ContractNetInitiator{
 
+        /**
+         *
+         * @param a - agent
+         * @param cfp - message
+         */
         public CallBehaviour(Agent a, ACLMessage cfp) {
             super(a, cfp);
         }
 
+        /**
+         *
+         * @param cfp  - patient illness
+         * @return v - return a vector with the ambulances most appropriate equipment
+         */
         protected Vector prepareCfps(ACLMessage cfp) {
             Vector v = new Vector();
 
@@ -72,18 +118,19 @@ public class CentralAgent extends Agent {
             sd.setType("ambulance");
             template.addServices(sd);
 
-
             try {
                 DFAgentDescription[] result = DFService.search(myAgent, template);
-                for(int i=0; i<result.length; ++i) {
+
+                for(int i = 0; i < result.length; ++i) {
                     cfp.addReceiver(result[i].getName());
                 }
-
             } catch(FIPAException fe) {
                 fe.printStackTrace();
             }
 
-            System.out.println("Sending ambulance request");
+            System.out.println("Sending ambulance request ...");
+            System.out.println("Problem: " + patientIllness);
+            System.out.println("");
 
             cfp.setContent(patientIllness);
 
@@ -94,6 +141,7 @@ public class CentralAgent extends Agent {
 
         protected void handleAllResponses(Vector responses, Vector acceptances) {
 
+            System.out.println("");
             System.out.println("Central got " + responses.size() + " responses!");
 
             Vector<String[]> allTokens = new Vector<>();
@@ -101,9 +149,14 @@ public class CentralAgent extends Agent {
             try {
                 for (int i = 0; i < responses.size(); i++) {
                     ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
+
                     String ambulanceResponse = ((ACLMessage) responses.get(i)).getContent();
+
                     String[] tokens = ambulanceResponse.split("-");
                     allTokens.add(tokens);
+
+                    //separar tipo de ambulancia e distancia
+                    //colocar num AMbulacia + tipo de ambulancia + distancia
                     System.out.println(ambulanceResponse);
                 }
             }
