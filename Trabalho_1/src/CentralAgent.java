@@ -136,16 +136,15 @@ public class CentralAgent extends Agent {
         }
 
         protected void handleAllResponses(Vector responses, Vector acceptances) {
-
             System.out.println("");
             System.out.println("Central got " + responses.size() + " responses!");
 
             Vector<String[]> allTokens = new Vector<>();
 
-            System.out.println("");
-            System.out.println("Information about the available ambulances: ");
-
             try {
+                System.out.println("");
+                System.out.println("Information about the available ambulances: ");
+
                 for (int i = 0; i < responses.size(); i++) {
                     ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
 
@@ -154,8 +153,9 @@ public class CentralAgent extends Agent {
                     String[] tokens = ambulanceResponse.split("-");
                     allTokens.add(tokens);
 
-                    System.out.println(" > Ambulance " + (i+1) + " is specialist in " + tokens[0] + " and the " +
-                            "patient's distance is " + tokens[1] + " km");
+                    System.out.println(" > Ambulance " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
+                            " is specialist in " + tokens[0] + " and the " + "patient's distance is " + tokens[1] +
+                            " km");
                 }
             }
             catch (NullPointerException e) {

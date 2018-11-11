@@ -9,18 +9,25 @@ import jade.proto.ContractNetResponder;
 
 import java.util.Random;
 
+/**
+ * This class represents the Hospital.
+ * The Hospital receive the patient and take care of him.
+ */
 public class HospitalAgent extends Agent {
     private int myAgentID = 0;
+
     public void setup(){
         addBehaviour(new HospitalBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
         myAgentID++;
 
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
+
         ServiceDescription sd = new ServiceDescription();
         sd.setType("hospital");
         sd.setName(getLocalName());
         dfd.addServices(sd);
+
         try {
             DFService.register(this, dfd);
         } catch(FIPAException fe) {
@@ -37,7 +44,6 @@ public class HospitalAgent extends Agent {
         }
 
         protected ACLMessage handleCfp(ACLMessage cfp) {
-
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
@@ -77,6 +83,7 @@ public class HospitalAgent extends Agent {
 
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
             ACLMessage nullMessage = new ACLMessage();
+
             try {
                 System.out.println(myAgent.getLocalName() + " got an accept!");
                 ACLMessage result = accept.createReply();
@@ -84,12 +91,11 @@ public class HospitalAgent extends Agent {
                 result.setContent("this is the result");
 
                 return result;
-            }
-            catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
+
             return nullMessage;
         }
-
     }
 }

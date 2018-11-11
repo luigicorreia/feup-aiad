@@ -7,8 +7,12 @@ import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.proto.AchieveREInitiator;
 
+import java.util.Random;
 import java.util.Vector;
 
+/**
+ * This class represents the patient. The patient is the responsible to initialize all the process.
+ */
 public class PatientAgent extends Agent {
     private Agent myAgent;
 
@@ -66,7 +70,8 @@ public class PatientAgent extends Agent {
         protected void handleAgree(ACLMessage agree) {
             //System.out.println(agree.getContent()+" thanks!!");
         }
-/**
+
+        /**
         protected void handleRefuse(ACLMessage refuse) {
             // ...
         }
@@ -78,7 +83,6 @@ public class PatientAgent extends Agent {
         protected void handleFailure(ACLMessage failure) {
             // ...
         }
-    }
- **/
+         **/
     }
 }
