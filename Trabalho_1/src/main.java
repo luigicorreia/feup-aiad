@@ -55,7 +55,7 @@ public class main {
         AgentController h1,h2,h3,h4,h5;
 
         //Patient Agents
-        AgentController p1;
+        AgentController p1, p2, p3, p4;
 
         //Ambulance Agents
         AgentController a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11;
@@ -71,6 +71,10 @@ public class main {
             h5 = acHospitals.createNewAgent("h5", "HospitalAgent", args); // Hospital Agent
 
             p1 = acPatients.createNewAgent("p1", "PatientAgent", args); // Patient Agent
+            p2 = acPatients.createNewAgent("p2", "PatientAgent", args); // Patient Agent
+            p3 = acPatients.createNewAgent("p3", "PatientAgent", args); // Patient Agent
+            p4 = acPatients.createNewAgent("p4", "PatientAgent", args); // Patient Agent
+
 
             c = acCentral.createNewAgent("c", "CentralAgent", args);
 
@@ -89,6 +93,9 @@ public class main {
 
 
             p1.start();
+            p2.start();
+            p3.start();
+            p4.start();
 
             c.start();
 

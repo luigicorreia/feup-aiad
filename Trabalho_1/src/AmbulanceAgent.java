@@ -15,7 +15,7 @@ import java.util.Vector;
 
 public class AmbulanceAgent extends Agent{
     String typeOfAmbulance = "";
-    String illness;
+    String illness = "heart";
 
     public void setup() {
         addBehaviour(new CallResponseBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
@@ -156,7 +156,6 @@ public class AmbulanceAgent extends Agent{
 
         protected ACLMessage handleCfp(ACLMessage cfp) {
 
-            illness = cfp.getContent();
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
@@ -176,7 +175,7 @@ public class AmbulanceAgent extends Agent{
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
             ACLMessage nullMessage = new ACLMessage();
             try {
-                System.out.println(myAgent.getLocalName() + " got an accept!");
+                System.out.println(myAgent.getLocalName() + " got an accept! Taking patient " + accept.getContent());
                 addBehaviour(new AmbulanceBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);

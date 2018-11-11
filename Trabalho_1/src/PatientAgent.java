@@ -7,10 +7,12 @@ import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.proto.AchieveREInitiator;
 
+import java.util.Random;
 import java.util.Vector;
 
 public class PatientAgent extends Agent {
     private Agent myAgent;
+    private String patientIllness;
 
     public void setup(){
 
@@ -29,7 +31,31 @@ public class PatientAgent extends Agent {
         } catch(FIPAException fe) {
             fe.printStackTrace();
         }
+        generateIllness();
+
+        System.out.println(myAgent.getName() + "   " + patientIllness);
     }
+
+    protected void generateIllness() {
+        Random r = new Random();
+        int random = r.nextInt(4) + 1;
+
+        switch(random) {
+            case 1:
+                patientIllness = "heart"; //Ambulance specialized in heart problems
+                break;
+            case 2:
+                patientIllness = "brain"; //Ambulance specialized in brain problems (like a stroke)
+                break;
+            case 3:
+                patientIllness = "bones"; //Ambulance specialized in dealing with broken bones or other bone health problems
+                break;
+            case 4:
+                patientIllness = "blood"; //Ambulance specialized in dealing with large hemorrhaging problems
+                break;
+        }
+    }
+
 
 
     public class PatientBehaviour extends AchieveREInitiator {
