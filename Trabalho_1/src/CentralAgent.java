@@ -26,6 +26,7 @@ public class CentralAgent extends Agent {
      */
     public void setup(){
         myAgent = this;
+
         addBehaviour(new CentralBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.REQUEST))));
 
         DFAgentDescription dfd = new DFAgentDescription();
@@ -38,6 +39,7 @@ public class CentralAgent extends Agent {
         dfd.addServices(sd);
 
         try {
+            // registar Central
             DFService.register(this, dfd);
         } catch(FIPAException fe) {
             fe.printStackTrace();
@@ -87,6 +89,12 @@ public class CentralAgent extends Agent {
          */
         protected  ACLMessage prepareResultNotification(ACLMessage request, ACLMessage response) {
             return response;
+        }
+
+        public int onEnd(){
+            System.out.println("achieve central");
+            System.out.println("* exit " + myAgent.getLocalName() + " *");
+            return super.onEnd();
         }
     }
 
@@ -168,6 +176,14 @@ public class CentralAgent extends Agent {
             ACLMessage msg = ((ACLMessage) responses.get(id)).createReply();
             msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
             acceptances.add(msg);
+
+            for (int i = 0; i < responses.size(); i++) {
+                if (i != id){
+                    ACLMessage msg2 = ((ACLMessage) responses.get(i)).createReply();
+                    msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                    acceptances.add(msg2);
+                }
+            }
         }
 
         protected void handleAllResultNotifications(Vector resultNotifications) {
@@ -205,6 +221,12 @@ public class CentralAgent extends Agent {
             }
 
             return id;
+        }
+
+        public int onEnd(){
+            System.out.println("contract net central");
+            System.out.println("*exit " + myAgent.getLocalName() + " *");
+            return super.onEnd();
         }
     }
 }

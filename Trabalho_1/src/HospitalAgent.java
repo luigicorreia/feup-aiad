@@ -29,6 +29,7 @@ public class HospitalAgent extends Agent {
         dfd.addServices(sd);
 
         try {
+            //registar hospital
             DFService.register(this, dfd);
         } catch(FIPAException fe) {
             fe.printStackTrace();
@@ -41,6 +42,8 @@ public class HospitalAgent extends Agent {
         public HospitalBehaviour(Agent a, MessageTemplate cfp) {
             super(a, cfp);
             myAgent = a;
+
+            System.out.println("*hospital: contrac net responder " + myAgent.getLocalName() + " *");
         }
 
         protected ACLMessage handleCfp(ACLMessage cfp) {
@@ -85,6 +88,7 @@ public class HospitalAgent extends Agent {
             ACLMessage nullMessage = new ACLMessage();
 
             try {
+                System.out.println("*handleAcceptProposal hospital*");
                 System.out.println(myAgent.getLocalName() + " got an accept!");
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
@@ -96,6 +100,11 @@ public class HospitalAgent extends Agent {
             }
 
             return nullMessage;
+        }
+
+        public int onEnd(){
+            System.out.println("*hospital: contrac net responder exit " + myAgent.getLocalName() + " *");
+            return super.onEnd();
         }
     }
 }

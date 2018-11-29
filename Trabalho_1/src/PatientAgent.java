@@ -18,22 +18,25 @@ public class PatientAgent extends Agent {
     private String patientIllness = "";
 
     public void setup(){
-
         myAgent = this;
 
         addBehaviour(new PatientBehaviour(this, new ACLMessage(ACLMessage.REQUEST)));
 
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
+
         ServiceDescription sd = new ServiceDescription();
         sd.setType("patient");
         sd.setName(getLocalName());
         dfd.addServices(sd);
+
         try {
+            // registar Paciente
             DFService.register(this, dfd);
         } catch(FIPAException fe) {
             fe.printStackTrace();
         }
+
         generateIllness();
     }
 
@@ -76,7 +79,7 @@ public class PatientAgent extends Agent {
                 for(int i=0; i<result.length; ++i) {
                     msg.addReceiver(result[i].getName());
                 }
-                System.out.println("Pacient asking for help. Heart problem");
+                System.out.println(myAgent.getLocalName() + ": Pacient asking for help. " + patientIllness + " problem");
 
             }   catch(FIPAException fe) {
                 fe.printStackTrace();
@@ -91,6 +94,11 @@ public class PatientAgent extends Agent {
 
         protected void handleAgree(ACLMessage agree) {
             //System.out.println(agree.getContent()+" thanks!!");
+        }
+
+        public int onEnd(){
+            System.out.println("*exit" + myAgent.getLocalName() + "*");
+            return super.onEnd();
         }
 
         /**

@@ -31,6 +31,7 @@ public class AmbulanceAgent extends Agent{
         dfd.addServices(sd);
 
         try {
+            // registar ambulancia
             DFService.register(this, dfd);
         } catch(FIPAException fe) {
             fe.printStackTrace();
@@ -62,7 +63,7 @@ public class AmbulanceAgent extends Agent{
     /**
      * Behaviour Ambulance uses to communicate with Hospital
      */
-    public class AmbulanceBehaviour extends ContractNetInitiator {
+    public class AmbulanceBehaviour extends  ContractNetInitiator {
         public AmbulanceBehaviour(Agent a, ACLMessage cfp) {
             super(a, cfp);
         }
@@ -134,6 +135,14 @@ public class AmbulanceAgent extends Agent{
             ACLMessage msg = ((ACLMessage) responses.get(id)).createReply();
             msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
             acceptances.add(msg);
+
+            for (int i = 0; i < responses.size(); i++) {
+                if (i != id){
+                    ACLMessage msg2 = ((ACLMessage) responses.get(i)).createReply();
+                    msg2.setPerformative(ACLMessage.REJECT_PROPOSAL);
+                    acceptances.add(msg2);
+                }
+            }
         }
 
         /**
@@ -176,6 +185,10 @@ public class AmbulanceAgent extends Agent{
             //System.out.println("got " + resultNotifications.size() + " result notifs!");
         }
 
+        public int onEnd(){
+            System.out.println("*ambulancia: ContractNetInitiator exit" + myAgent.getLocalName() + "*");
+            return super.onEnd();
+        }
     }
 
     /**
@@ -204,7 +217,19 @@ public class AmbulanceAgent extends Agent{
         }
 
         protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
-            System.out.println(myAgent.getLocalName() + " got a reject...");
+            try {
+                System.out.println(myAgent.getLocalName() + " got a reject...");
+
+                addBehaviour(new AmbulanceBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
+
+                ACLMessage result = reject.createReply();
+                result.setPerformative(ACLMessage.INFORM);
+                result.setContent("this is the result");
+
+                //return result;
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
         }
 
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
@@ -225,6 +250,11 @@ public class AmbulanceAgent extends Agent{
             }
 
             return nullMessage;
+        }
+
+        public int onEnd(){
+            System.out.println("*Ambulancias: ContractNetResponder exit" + myAgent.getLocalName() + "*");
+            return super.onEnd();
         }
     }
 }
