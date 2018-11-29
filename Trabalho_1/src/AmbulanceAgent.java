@@ -17,7 +17,7 @@ import java.util.Vector;
  */
 public class AmbulanceAgent extends Agent{
     String typeOfAmbulance = "";
-    String illness;
+    String illness = "heart";
 
     public void setup() {
         addBehaviour(new CallResponseBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));

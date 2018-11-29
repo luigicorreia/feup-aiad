@@ -65,6 +65,7 @@ public class main {
      */
     public static void start_world() {
         Object[] args = new Object[1];
+        PatientControl pc = new PatientControl();
 
         // Hospital Agents
         AgentController H1, H2, H3, H4, H5;
@@ -72,6 +73,7 @@ public class main {
         //Patient Agents
         AgentController P1;
         AgentController P2;
+
 
         //Ambulance Agents
         AgentController A1, A2, A3, A4, A5, A6, A7, A8, A9, A10, A11;
