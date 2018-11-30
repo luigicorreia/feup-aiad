@@ -21,6 +21,7 @@ import java.util.Vector;
 public class CentralAgent extends Agent {
     private Agent myAgent;
     private Vector<String> patientIllnesses = new Vector();
+    private String patientIllness="";
 
     /**
      * This function prepare the Central Agent.
@@ -174,6 +175,7 @@ public class CentralAgent extends Agent {
             System.out.println("");
 
             int id = analyzeInfo(allTokens);
+
             ACLMessage msg = ((ACLMessage) responses.get(id)).createReply();
             msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
             acceptances.add(msg);
@@ -181,7 +183,10 @@ public class CentralAgent extends Agent {
             for (int i = 0; i < responses.size(); i++) {
                 if (i != id){
                     ACLMessage msg2 = ((ACLMessage) responses.get(i)).createReply();
+                    /*
                     msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
+                     */
+                    msg2.setPerformative(ACLMessage.REJECT_PROPOSAL);
                     acceptances.add(msg2);
                 }
             }
@@ -199,38 +204,31 @@ public class CentralAgent extends Agent {
             }
         }
 
-        protected Vector<Pair<Integer,Integer>> analyzeInfo(Vector<String[]> tokens) {
+        protected int analyzeInfo(Vector<String[]> tokens) {
+            int min = 100;
+            int id = -1;
+            int min2op = 100;
+            int id2op = 0;
 
+            for(int i = 0; i < tokens.size(); i++) {
+                int num = Integer.parseInt(tokens.get(i)[1]);
 
-            Vector<Pair<Integer,Integer>> ambulanceAssignments = new Vector();
-
-
-            for(int j = 0; j < patientIllnesses.size(); j++) {
-                int min = 100;
-                int id = -1;
-                int min2op = 100;
-                int id2op = 0;
-
-                for (int i = 0; i < tokens.size(); i++) {
-                    if (Integer.parseInt(tokens.get(i)[1]) < min && patientIllnesses.get(j).equals(tokens.get(i)[0])) {
-                        min = Integer.parseInt(tokens.get(i)[1]);
-                        id = i;
-                    }
-
-                    if (Integer.parseInt(tokens.get(i)[1]) < min2op) {
-                        min2op = Integer.parseInt(tokens.get(i)[1]);
-                        id2op = i;
-                    }
+                if(num < min && patientIllness.equals(tokens.get(i)[0]) ) {
+                    min = Integer.parseInt(tokens.get(i)[1]);
+                    id = i;
                 }
-                if(id == -1){
-                    id = id2op;
+
+                if(num < min2op){
+                    min2op = Integer.parseInt(tokens.get(i)[1]);
+                    id2op = i;
                 }
-                String[] replacement = new String[]{tokens.get(id)[0], "100"};
-                tokens.set(id,replacement);
-                ambulanceAssignments.add(new Pair<Integer, Integer>(j,id));
             }
 
-            return ambulanceAssignments;
+            if(id == -1){
+                id = id2op;
+            }
+
+            return id;
         }
 
         public int onEnd(){

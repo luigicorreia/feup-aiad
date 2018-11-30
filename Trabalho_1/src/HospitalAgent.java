@@ -43,7 +43,9 @@ public class HospitalAgent extends Agent {
             super(a, cfp);
             myAgent = a;
 
+            /*
             System.out.println("*hospital: contrac net responder " + myAgent.getLocalName() + " *");
+             */
         }
 
         protected ACLMessage handleCfp(ACLMessage cfp) {

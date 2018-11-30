@@ -220,13 +220,13 @@ public class AmbulanceAgent extends Agent{
             try {
                 System.out.println(myAgent.getLocalName() + " got a reject...");
 
+                /*
                 addBehaviour(new AmbulanceBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
+                 */
 
                 ACLMessage result = reject.createReply();
                 result.setPerformative(ACLMessage.INFORM);
                 result.setContent("this is the result");
-
-                //return result;
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
