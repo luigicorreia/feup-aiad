@@ -20,6 +20,8 @@ public class AmbulanceAgent extends Agent{
     String illness = "heart";
     int distance = 0;
 
+    boolean available = true;
+
     public void setup() {
         addBehaviour(new CallResponseBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
 
@@ -59,6 +61,14 @@ public class AmbulanceAgent extends Agent{
                 typeOfAmbulance = "blood";
                 break;
         }
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     /**
@@ -187,7 +197,7 @@ public class AmbulanceAgent extends Agent{
         }
 
         public int onEnd(){
-            System.out.println("*ambulancia: ContractNetInitiator exit" + myAgent.getLocalName() + "*");
+            //System.out.println("*ambulancia: ContractNetInitiator exit" + myAgent.getLocalName() + "*");
             return super.onEnd();
         }
     }
@@ -208,10 +218,11 @@ public class AmbulanceAgent extends Agent{
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-            if (distance != 100)
+            if (distance != 100) {
                 distance = (int )(Math.random() * 75 + 1);
+            }
 
-            String info = typeOfAmbulance + "-" + distance;
+            String info = typeOfAmbulance + "-" + distance + "-" + isAvailable();
             System.out.println(myAgent.getName() + " " + info);
             reply.setContent(info);
 
@@ -221,10 +232,6 @@ public class AmbulanceAgent extends Agent{
         protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
             try {
                 System.out.println(myAgent.getLocalName() + " got a reject...");
-
-                /*
-                addBehaviour(new AmbulanceBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
-                 */
 
                 ACLMessage result = reject.createReply();
                 result.setPerformative(ACLMessage.INFORM);
@@ -243,6 +250,7 @@ public class AmbulanceAgent extends Agent{
                 addBehaviour(new AmbulanceBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
 
                 distance = 100;
+                setAvailable(false);
 
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
@@ -257,7 +265,7 @@ public class AmbulanceAgent extends Agent{
         }
 
         public int onEnd(){
-            System.out.println("*Ambulancias: ContractNetResponder exit" + myAgent.getLocalName() + "*");
+            //System.out.println("*Ambulancias: ContractNetResponder exit" + myAgent.getLocalName() + "*");
             return super.onEnd();
         }
     }

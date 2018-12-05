@@ -90,7 +90,7 @@ public class HospitalAgent extends Agent {
             ACLMessage nullMessage = new ACLMessage();
 
             try {
-                System.out.println("*handleAcceptProposal hospital*");
+                //System.out.println("*handleAcceptProposal hospital*");
                 System.out.println(myAgent.getLocalName() + " got an accept!");
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
@@ -105,7 +105,7 @@ public class HospitalAgent extends Agent {
         }
 
         public int onEnd(){
-            System.out.println("*hospital: contrac net responder exit " + myAgent.getLocalName() + " *");
+            //System.out.println("*hospital: contrac net responder exit " + myAgent.getLocalName() + " *");
             return super.onEnd();
         }
     }

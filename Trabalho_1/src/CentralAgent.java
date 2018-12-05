@@ -165,7 +165,7 @@ public class CentralAgent extends Agent {
                     allTokens.add(tokens);
                     System.out.println(" > Ambulance " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
                             " is specialist in " + tokens[0] + " and the " + "patient's distance is " + tokens[1] +
-                            " km");
+                            " km and availability is " + tokens[2]);
                 }
             }
             catch (NullPointerException e) {
@@ -176,16 +176,19 @@ public class CentralAgent extends Agent {
 
             int id = analyzeInfo(allTokens);
 
+            if (id == -1){
+                System.out.println("Não existem ambulâncias disponíveis");
+                return;
+            }
+
             ACLMessage msg = ((ACLMessage) responses.get(id)).createReply();
             msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
             acceptances.add(msg);
 
+
             for (int i = 0; i < responses.size(); i++) {
                 if (i != id){
                     ACLMessage msg2 = ((ACLMessage) responses.get(i)).createReply();
-                    /*
-                    msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
-                     */
                     msg2.setPerformative(ACLMessage.REJECT_PROPOSAL);
                     acceptances.add(msg2);
                 }
@@ -204,36 +207,50 @@ public class CentralAgent extends Agent {
             }
         }
 
+        /**
+         * Select the ambulance
+         * @param tokens
+         * @return
+         */
         protected int analyzeInfo(Vector<String[]> tokens) {
             int min = 100;
             int id = -1;
             int min2op = 100;
             int id2op = 0;
+            boolean noAmbulanceAvailable = true;
 
             for(int i = 0; i < tokens.size(); i++) {
-                int num = Integer.parseInt(tokens.get(i)[1]);
+                System.out.println(tokens.get(i)[2]);
+                if (tokens.get(i)[2].equals("true")){
+                    int num = Integer.parseInt(tokens.get(i)[1]);
 
-                if(num < min && patientIllness.equals(tokens.get(i)[0]) ) {
-                    min = Integer.parseInt(tokens.get(i)[1]);
-                    id = i;
-                }
+                    if(num < min && patientIllness.equals(tokens.get(i)[0])) {
+                        min = Integer.parseInt(tokens.get(i)[1]);
+                        id = i;
+                    }
 
-                if(num < min2op){
-                    min2op = Integer.parseInt(tokens.get(i)[1]);
-                    id2op = i;
+                    if(num < min2op){
+                        min2op = Integer.parseInt(tokens.get(i)[1]);
+                        id2op = i;
+                    }
+
+                    noAmbulanceAvailable = false;
                 }
             }
 
-            if(id == -1){
+            if (noAmbulanceAvailable == true){
+                return -1;
+            } else if(id == -1 && tokens.get(id2op)[2].equals("true")){
                 id = id2op;
             }
+
 
             return id;
         }
 
         public int onEnd(){
-            System.out.println("contract net central");
-            System.out.println("*exit " + myAgent.getLocalName() + " *");
+            //System.out.println("contract net central");
+            //System.out.println("*exit " + myAgent.getLocalName() + " *");
             return super.onEnd();
         }
     }

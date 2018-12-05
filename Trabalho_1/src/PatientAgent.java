@@ -97,7 +97,7 @@ public class PatientAgent extends Agent {
         }
 
         public int onEnd(){
-            System.out.println("*exit" + myAgent.getLocalName() + "*");
+            //System.out.println("*exit" + myAgent.getLocalName() + "*");
             return super.onEnd();
         }
 

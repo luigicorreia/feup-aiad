@@ -58,7 +58,7 @@ public class main {
         AgentController h1,h2,h3,h4,h5, h6, h7, h8, h9, h10;
 
         //Patient Agents
-        AgentController p1, p2, p3, p4;
+        AgentController p1, p2, p3, p4, p5;
 
 
         //Ambulance Agents
@@ -85,6 +85,7 @@ public class main {
             p2 = acPatients.createNewAgent("p2", "PatientAgent", args); // Patient Agent
             p3 = acPatients.createNewAgent("p3", "PatientAgent", args); // Patient Agent
             p4 = acPatients.createNewAgent("p4", "PatientAgent", args); // Patient Agent
+            p5 = acPatients.createNewAgent("p5", "PatientAgent", args); // Patient Agent
 
 
             c1 = acCentral.createNewAgent("c", "CentralAgent", args);
@@ -131,6 +132,7 @@ public class main {
             patients.add(p2);
             patients.add(p3);
             patients.add(p4);
+            patients.add(p5);
 
             pc.schedulePatient(patients);
 //            p2.start();

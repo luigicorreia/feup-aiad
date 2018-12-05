@@ -18,15 +18,16 @@ public class PatientControl {
         final Runnable beeper = new Runnable() {
             public void run() {
                 try {
-                    System.out.println("\n\n\n");
+                    //System.out.println("\n\n\n");
+                    System.out.println("");
+                    System.out.println("-----------------------------------------------------------------------------");
+                    System.out.println("");
                     if (i < p.size()) {
                         p.get(i).start();
                         i++;
+                    } else {
+                        System.out.println("finished!!");
                     }
-
-                    else {System.out.println("finished!!");
-                    }
-
                 } catch (StaleProxyException e) {
                     e.printStackTrace();
                 }
