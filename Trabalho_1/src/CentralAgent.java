@@ -161,8 +161,8 @@ public class CentralAgent extends Agent {
                     String ambulanceResponse = ((ACLMessage) responses.get(i)).getContent();
 
                     String[] tokens = ambulanceResponse.split("-");
-                    allTokens.add(tokens);
 
+                    allTokens.add(tokens);
                     System.out.println(" > Ambulance " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
                             " is specialist in " + tokens[0] + " and the " + "patient's distance is " + tokens[1] +
                             " km");

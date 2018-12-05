@@ -19,7 +19,7 @@ public class PatientControl {
             public void run() {
                 try {
                     System.out.println("\n\n\n");
-                    if (i <= 1) {
+                    if (i < p.size()) {
                         p.get(i).start();
                         i++;
                     }
@@ -33,7 +33,7 @@ public class PatientControl {
             }
         };
         final ScheduledFuture<?> beeperHandle =
-                scheduler.scheduleAtFixedRate(beeper, 5, 7, SECONDS);
+                scheduler.scheduleAtFixedRate(beeper, 5, 2, SECONDS);
         scheduler.schedule(new Runnable() {
             public void run() { beeperHandle.cancel(true); }
         }, 20, SECONDS);
