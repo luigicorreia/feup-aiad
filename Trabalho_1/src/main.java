@@ -131,8 +131,8 @@ public class main {
             patients.add(p1);
             patients.add(p2);
             patients.add(p3);
-            patients.add(p4);
-            patients.add(p5);
+//            patients.add(p4);
+//            patients.add(p5);
 
             pc.schedulePatient(patients);
 //            p2.start();

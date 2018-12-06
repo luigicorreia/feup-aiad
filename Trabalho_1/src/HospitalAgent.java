@@ -17,6 +17,7 @@ public class HospitalAgent extends Agent {
     private int myAgentID = 0;
     private int x;
     private int y;
+    String specialty = "";
 
     public void setup(){
         addBehaviour(new HospitalBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
@@ -35,6 +36,24 @@ public class HospitalAgent extends Agent {
             DFService.register(this, dfd);
         } catch(FIPAException fe) {
             fe.printStackTrace();
+        }
+
+        Random r = new Random();
+        int random = r.nextInt(4) + 1;
+
+        switch (random) {
+            case 1:
+                specialty = "heart";
+                break;
+            case 2:
+                specialty = "brain";
+                break;
+            case 3:
+                specialty = "bones";
+                break;
+            case 4:
+                specialty = "blood";
+                break;
         }
     }
 
@@ -75,12 +94,6 @@ public class HospitalAgent extends Agent {
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-            int distance = (int )(Math.random() * 75 + 1);
-
-            Random r = new Random();
-            int random = r.nextInt(4) + 1;
-            String specialty = "";
-
             int aux = calculateCoordinate();
             setX(aux);
 
@@ -95,22 +108,8 @@ public class HospitalAgent extends Agent {
             System.out.println("");
             */
 
-            switch (random) {
-                case 1:
-                    specialty = "heart-";
-                    break;
-                case 2:
-                    specialty = "brain-";
-                    break;
-                case 3:
-                    specialty = "bones-";
-                    break;
-                case 4:
-                    specialty = "blood-";
-                    break;
-            }
 
-            String info = specialty + Integer.toString(distance);
+            String info = specialty + "-" + Integer.toString(x) + "-" + Integer.toString(y);
 
             reply.setContent(info);
 

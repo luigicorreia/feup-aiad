@@ -18,10 +18,12 @@ import java.util.Vector;
 public class AmbulanceAgent extends Agent{
     String typeOfAmbulance = "";
     String illness = "heart";
-    int distance = 0;
     boolean available = true;
     private int x;
     private int y;
+
+    private int patientX;
+    private int patientY;
 
     public void setup() {
         addBehaviour(new CallResponseBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
@@ -110,6 +112,17 @@ public class AmbulanceAgent extends Agent{
         return aux;
     }
 
+    private int calculateDistance(int x1, int y1, int x2, int y2) {
+        int dist;
+
+        int diff_x = Math.abs(x2 - x1);
+        int diff_y = Math.abs(y2 - y1);
+
+        dist = (int) Math.sqrt(diff_x*diff_x + diff_y*diff_y);
+
+        return dist;
+    }
+
     /**
      * Behaviour Ambulance uses to communicate with Hospital
      */
@@ -171,19 +184,26 @@ public class AmbulanceAgent extends Agent{
                     hospitalInfo = ((ACLMessage) responses.get(i)).getContent();
 
                     String[] tokens = hospitalInfo.split("-");
+
+                    int i1 = Integer.parseInt(tokens[1]);
+                    int i2 = Integer.parseInt(tokens[2]);
+
+                    int dist = calculateDistance(patientX, patientY, i1, i2);
+
+                    tokens[1] = Integer.toString(dist);
+
                     allTokens.add(tokens);
 
                     System.out.println("|  " + ((ACLMessage) responses.get(i)).getSender().getLocalName() + "  |    "
-                            + tokens[0] + "    |      " + getX() + "     |      " + getY() + "     |     " +
-                            "d" + "    |");
+                            + tokens[0] + "    |      " + i1 + "     |      " + i2 + "     |     " +
+                            dist + "    |");
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
 
-            System.out.println("");
-
             id = analyzeInfo(allTokens);
+
 
             ACLMessage msg = ((ACLMessage) responses.get(id)).createReply();
             msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
@@ -254,13 +274,22 @@ public class AmbulanceAgent extends Agent{
         }
 
         protected ACLMessage handleCfp(ACLMessage cfp) {
-            illness = cfp.getContent();
+            String ambulanceResponse = cfp.getContent();
+
+            String[] tokens = ambulanceResponse.split("-");
+
+            illness = tokens[0];
+            patientX = Integer.parseInt(tokens[1]);
+            patientY = Integer.parseInt(tokens[2]);
+
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-            if (distance != 100) {
-                distance = (int )(Math.random() * 75 + 1);
-            }
+//            if (distance != 100) {
+//                distance = (int )(Math.random() * 75 + 1);
+//            }
+
+            int distance = calculateDistance(x, y, patientX, patientY);
 
             String info = typeOfAmbulance + "-" + distance + "-" + isAvailable();
             System.out.println(myAgent.getName() + " " + info);
@@ -289,7 +318,6 @@ public class AmbulanceAgent extends Agent{
 
                 addBehaviour(new AmbulanceBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
 
-                distance = 100;
                 setAvailable(false);
 
                 ACLMessage result = accept.createReply();

@@ -22,6 +22,8 @@ public class CentralAgent extends Agent {
     private Agent myAgent;
     private Vector<String> patientIllnesses = new Vector();
     private String patientIllness="";
+    private int patientX = 0;
+    private int patientY = 0;
 
     /**
      * This function prepare the Central Agent.
@@ -69,12 +71,18 @@ public class CentralAgent extends Agent {
         protected ACLMessage handleRequest(ACLMessage msg) {
             ACLMessage reply = msg.createReply();
 
-            patientIllness = msg.getContent();
+            String patientRequest = msg.getContent();
+
+            String[] tokens = patientRequest.split("-");
+
+            patientIllness = tokens[0];
+            patientX = Integer.parseInt(tokens[1]);
+            patientY = Integer.parseInt(tokens[2]);
 
             addBehaviour(new CallBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
 
             System.out.println("");
-            System.out.println("Central received call.");
+            System.out.println("Central received call. Patient is at " + patientX + "-" + patientY);
             System.out.println("");
 
             reply.setPerformative(ACLMessage.AGREE);
@@ -136,7 +144,7 @@ public class CentralAgent extends Agent {
             System.out.println("Problem: " + patientIllness);
             System.out.println("");
 
-            cfp.setContent(patientIllness);
+            cfp.setContent(patientIllness + "-" + patientX + "-" + patientY);
 
             v.add(cfp);
 
@@ -170,12 +178,12 @@ public class CentralAgent extends Agent {
 
                     allTokens.add(tokens);
 
-                    /*
+
                     System.out.println("|  " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
-                            "  |    " + tokens[0] +"    |      " + ((ACLMessage) responses.get(i)).getSender().getX() +
-                            "     |      " + ((ACLMessage) responses.get(i)).getSender().getY() + "     |     " +
+                            "  |    " + tokens[0] +"    |      " + tokens[1] +
+                            "     |      " + tokens[2] + "     |     " +
                             "d" + "    |");
-                            */
+
 
                 }
             }

@@ -125,7 +125,7 @@ public class PatientAgent extends Agent {
                 fe.printStackTrace();
             }
 
-            msg.setContent(patientIllness);
+            msg.setContent(patientIllness + "-" + Integer.toString(x) + "-" + Integer.toString(y));
 
             v.add(msg);
 
