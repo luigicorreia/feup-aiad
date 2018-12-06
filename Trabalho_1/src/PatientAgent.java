@@ -16,6 +16,8 @@ import java.util.Vector;
 public class PatientAgent extends Agent {
     private Agent myAgent;
     private String patientIllness = "";
+    private int x;
+    private int y;
 
     public void setup(){
         myAgent = this;
@@ -40,9 +42,37 @@ public class PatientAgent extends Agent {
         generateIllness();
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     protected void generateIllness() {
         Random r = new Random();
         int random = r.nextInt(4) + 1;
+
+        int aux = calculateCoordinate();
+        setX(aux);
+
+        aux = calculateCoordinate();
+        setY(aux);
+
+        System.out.println("");
+        System.out.println("Paciente");
+        System.out.println("x = " + getX());
+        System.out.println("y = " + getY());
+        System.out.println("");
 
         switch(random) {
             case 1:
@@ -58,6 +88,16 @@ public class PatientAgent extends Agent {
                 patientIllness = "blood"; //Ambulance specialized in dealing with large hemorrhaging problems
                 break;
         }
+    }
+
+    public int calculateCoordinate(){
+        Random r = new Random();
+        //int aux = r.nextInt(4) + 1;
+
+        int aux = r.nextInt(8) + 1;
+        //int aux = r.nextInt(16) + 1;
+
+        return aux;
     }
 
 
@@ -93,26 +133,10 @@ public class PatientAgent extends Agent {
         }
 
         protected void handleAgree(ACLMessage agree) {
-            //System.out.println(agree.getContent()+" thanks!!");
         }
 
         public int onEnd(){
-            //System.out.println("*exit" + myAgent.getLocalName() + "*");
             return super.onEnd();
         }
-
-        /**
-        protected void handleRefuse(ACLMessage refuse) {
-            // ...
-        }
-
-        protected void handleInform(ACLMessage inform) {
-            // ...
-        }
-
-        protected void handleFailure(ACLMessage failure) {
-            // ...
-        }
-         **/
     }
 }

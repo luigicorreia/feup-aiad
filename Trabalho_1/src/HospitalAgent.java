@@ -15,6 +15,8 @@ import java.util.Random;
  */
 public class HospitalAgent extends Agent {
     private int myAgentID = 0;
+    private int x;
+    private int y;
 
     public void setup(){
         addBehaviour(new HospitalBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
@@ -36,16 +38,38 @@ public class HospitalAgent extends Agent {
         }
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int calculateCoordinate(){
+        Random r = new Random();
+        //int aux = r.nextInt(4) + 1;
+
+        int aux = r.nextInt(8) + 1;
+        //int aux = r.nextInt(16) + 1;
+
+        return aux;
+    }
+
     public class HospitalBehaviour extends ContractNetResponder {
         private Agent myAgent;
 
         public HospitalBehaviour(Agent a, MessageTemplate cfp) {
             super(a, cfp);
             myAgent = a;
-
-            /*
-            System.out.println("*hospital: contrac net responder " + myAgent.getLocalName() + " *");
-             */
         }
 
         protected ACLMessage handleCfp(ACLMessage cfp) {
@@ -57,6 +81,18 @@ public class HospitalAgent extends Agent {
             Random r = new Random();
             int random = r.nextInt(4) + 1;
             String specialty = "";
+
+            int aux = calculateCoordinate();
+            setX(aux);
+
+            aux = calculateCoordinate();
+            setY(aux);
+
+            System.out.println("");
+            System.out.println("Hospital");
+            System.out.println("x = " + getX());
+            System.out.println("y = " + getY());
+            System.out.println("");
 
             switch (random) {
                 case 1:

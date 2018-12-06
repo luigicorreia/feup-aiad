@@ -19,8 +19,9 @@ public class AmbulanceAgent extends Agent{
     String typeOfAmbulance = "";
     String illness = "heart";
     int distance = 0;
-
     boolean available = true;
+    private int x;
+    private int y;
 
     public void setup() {
         addBehaviour(new CallResponseBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
@@ -43,6 +44,18 @@ public class AmbulanceAgent extends Agent{
         Random r = new Random();
         int random = r.nextInt(4) + 1;
 
+        int aux = calculateCoordinate();
+        setX(aux);
+
+        aux = calculateCoordinate();
+        setY(aux);
+
+        System.out.println("");
+        System.out.println("Ambulância");
+        System.out.println("x = " + getX());
+        System.out.println("y = " + getY());
+        System.out.println("");
+
         switch(random) {
             //Ambulance specialized in heart problems
             case 1:
@@ -63,12 +76,38 @@ public class AmbulanceAgent extends Agent{
         }
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public boolean isAvailable() {
         return available;
     }
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public int calculateCoordinate(){
+        Random r = new Random();
+        //int aux = r.nextInt(4) + 1;
+
+        int aux = r.nextInt(8) + 1;
+        //int aux = r.nextInt(16) + 1;
+
+        return aux;
     }
 
     /**
@@ -121,19 +160,24 @@ public class AmbulanceAgent extends Agent{
             Vector<String[]> allTokens = new Vector<>();
             int id;
 
-            try {
-                System.out.println("");
-                System.out.println("Information about the available Hospitals:");
+            System.out.println("");
+            System.out.println("Hospital data:");
+            System.out.println("");
+            System.out.println("| name | specialisty | position x | position y | distance |");
+            System.out.println("|------|-------------|------------|------------|----------|");
 
+            try {
                 for (int i = 0; i < responses.size(); i++) {
                     hospitalInfo = ((ACLMessage) responses.get(i)).getContent();
 
                     String[] tokens = hospitalInfo.split("-");
                     allTokens.add(tokens);
 
-                    System.out.println(" > Hospital " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
-                            " is specialist in " + tokens[0] + " and the " + "patient's distance is " + tokens[1] +
-                            " km");
+                    //System.out.println("| " + ((ACLMessage) responses.get(i)).getSender().getLocalName() + " | " + tokens[0] + " | " + tokens[1] + " | " + " d " + " | ");
+
+                    System.out.println("|  " + ((ACLMessage) responses.get(i)).getSender().getLocalName() + "  |    "
+                            + tokens[0] + "    |      " + getX() + "     |      " + getY() + "     |     " +
+                            "d" + "    |");
                 }
             } catch (NullPointerException e) {
                 e.printStackTrace();
@@ -193,11 +237,9 @@ public class AmbulanceAgent extends Agent{
          * @param resultNotifications - vector with all the answers
          */
         protected void handleAllResultNotifications(Vector resultNotifications) {
-            //System.out.println("got " + resultNotifications.size() + " result notifs!");
         }
 
         public int onEnd(){
-            //System.out.println("*ambulancia: ContractNetInitiator exit" + myAgent.getLocalName() + "*");
             return super.onEnd();
         }
     }
@@ -265,7 +307,6 @@ public class AmbulanceAgent extends Agent{
         }
 
         public int onEnd(){
-            //System.out.println("*Ambulancias: ContractNetResponder exit" + myAgent.getLocalName() + "*");
             return super.onEnd();
         }
     }
