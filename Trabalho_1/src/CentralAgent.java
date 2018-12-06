@@ -94,8 +94,6 @@ public class CentralAgent extends Agent {
         }
 
         public int onEnd(){
-            System.out.println("achieve central");
-            System.out.println("* exit " + myAgent.getLocalName() + " *");
             return super.onEnd();
         }
     }
@@ -152,8 +150,16 @@ public class CentralAgent extends Agent {
             Vector<String[]> allTokens = new Vector<>();
 
             try {
+                /*
                 System.out.println("");
                 System.out.println("Information about the available ambulances: ");
+                */
+
+                System.out.println("");
+                System.out.println("Ambulance data:");
+                System.out.println("");
+                System.out.println("| name | specialisty | position x | position y | distance |");
+                System.out.println("|------|-------------|------------|------------|----------|");
 
                 for (int i = 0; i < responses.size(); i++) {
                     ACLMessage msg = ((ACLMessage) responses.get(i)).createReply();
@@ -163,9 +169,14 @@ public class CentralAgent extends Agent {
                     String[] tokens = ambulanceResponse.split("-");
 
                     allTokens.add(tokens);
-                    System.out.println(" > Ambulance " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
-                            " is specialist in " + tokens[0] + " and the " + "patient's distance is " + tokens[1] +
-                            " km and availability is " + tokens[2]);
+
+                    /*
+                    System.out.println("|  " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
+                            "  |    " + tokens[0] +"    |      " + ((ACLMessage) responses.get(i)).getSender().getX() +
+                            "     |      " + ((ACLMessage) responses.get(i)).getSender().getY() + "     |     " +
+                            "d" + "    |");
+                            */
+
                 }
             }
             catch (NullPointerException e) {

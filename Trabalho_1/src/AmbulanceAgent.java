@@ -173,8 +173,6 @@ public class AmbulanceAgent extends Agent{
                     String[] tokens = hospitalInfo.split("-");
                     allTokens.add(tokens);
 
-                    //System.out.println("| " + ((ACLMessage) responses.get(i)).getSender().getLocalName() + " | " + tokens[0] + " | " + tokens[1] + " | " + " d " + " | ");
-
                     System.out.println("|  " + ((ACLMessage) responses.get(i)).getSender().getLocalName() + "  |    "
                             + tokens[0] + "    |      " + getX() + "     |      " + getY() + "     |     " +
                             "d" + "    |");

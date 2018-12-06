@@ -57,7 +57,6 @@ public class HospitalAgent extends Agent {
     public int calculateCoordinate(){
         Random r = new Random();
         //int aux = r.nextInt(4) + 1;
-
         int aux = r.nextInt(8) + 1;
         //int aux = r.nextInt(16) + 1;
 
@@ -88,11 +87,13 @@ public class HospitalAgent extends Agent {
             aux = calculateCoordinate();
             setY(aux);
 
+            /*
             System.out.println("");
             System.out.println("Hospital");
             System.out.println("x = " + getX());
             System.out.println("y = " + getY());
             System.out.println("");
+            */
 
             switch (random) {
                 case 1:
@@ -111,22 +112,18 @@ public class HospitalAgent extends Agent {
 
             String info = specialty + Integer.toString(distance);
 
-            System.out.println(myAgent.getName() + info);
-
             reply.setContent(info);
 
             return reply;
         }
 
         protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
-            //System.out.println(myAgent.getLocalName() + " got a reject...");
         }
 
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
             ACLMessage nullMessage = new ACLMessage();
 
             try {
-                //System.out.println("*handleAcceptProposal hospital*");
                 System.out.println(myAgent.getLocalName() + " got an accept!");
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
@@ -141,7 +138,6 @@ public class HospitalAgent extends Agent {
         }
 
         public int onEnd(){
-            //System.out.println("*hospital: contrac net responder exit " + myAgent.getLocalName() + " *");
             return super.onEnd();
         }
     }
