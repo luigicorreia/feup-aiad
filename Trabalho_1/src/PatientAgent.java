@@ -68,12 +68,6 @@ public class PatientAgent extends Agent {
         aux = calculateCoordinate();
         setY(aux);
 
-        System.out.println("");
-        System.out.println("Paciente");
-        System.out.println("x = " + getX());
-        System.out.println("y = " + getY());
-        System.out.println("");
-
         switch(random) {
             case 1:
                 patientIllness = "heart"; //Ambulance specialized in heart problems
@@ -116,9 +110,11 @@ public class PatientAgent extends Agent {
 
             try {
                 DFAgentDescription[] result = DFService.search(myAgent, template);
+
                 for(int i=0; i<result.length; ++i) {
                     msg.addReceiver(result[i].getName());
                 }
+
                 System.out.println(myAgent.getLocalName() + ": Pacient asking for help. " + patientIllness + " problem");
 
             }   catch(FIPAException fe) {
@@ -126,13 +122,13 @@ public class PatientAgent extends Agent {
             }
 
             msg.setContent(patientIllness + "-" + Integer.toString(x) + "-" + Integer.toString(y));
-
             v.add(msg);
 
             return v;
         }
 
         protected void handleAgree(ACLMessage agree) {
+
         }
 
         public int onEnd(){
