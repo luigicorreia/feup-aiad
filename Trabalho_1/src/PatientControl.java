@@ -18,25 +18,29 @@ public class PatientControl {
         final Runnable beeper = new Runnable() {
             public void run() {
                 try {
-                    //System.out.println("\n\n\n");
                     System.out.println("");
                     System.out.println("-----------------------------------------------------------------------------");
                     System.out.println("");
+
                     if (i < p.size()) {
                         p.get(i).start();
                         i++;
                     } else {
-                        System.out.println("finished!!");
+                        System.out.println("Finished!!");
                     }
                 } catch (StaleProxyException e) {
                     e.printStackTrace();
                 }
             }
         };
+
         final ScheduledFuture<?> beeperHandle =
                 scheduler.scheduleAtFixedRate(beeper, 5, 2, SECONDS);
+
         scheduler.schedule(new Runnable() {
-            public void run() { beeperHandle.cancel(true); }
+            public void run() {
+                beeperHandle.cancel(true);
+            }
         }, 20, SECONDS);
     }
 
