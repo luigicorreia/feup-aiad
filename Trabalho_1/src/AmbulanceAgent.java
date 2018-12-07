@@ -16,9 +16,9 @@ import java.util.Vector;
  * This class represents the Ambulance.
  */
 public class AmbulanceAgent extends Agent{
-    String typeOfAmbulance = "";
-    String illness = "heart";
-    boolean available = true;
+    private String typeOfAmbulance = "";
+    private String illness = "";
+    private boolean available = true;
     private int x;
     private int y;
 
@@ -43,39 +43,49 @@ public class AmbulanceAgent extends Agent{
             fe.printStackTrace();
         }
 
-        Random r = new Random();
-        int random = r.nextInt(4) + 1;
-
         int aux = calculateCoordinate();
         setX(aux);
 
         aux = calculateCoordinate();
         setY(aux);
 
-        System.out.println("");
-        System.out.println("Ambulância");
-        System.out.println("x = " + getX());
-        System.out.println("y = " + getY());
-        System.out.println("");
+        Random r = new Random();
+        int random = r.nextInt(4) + 1;
 
         switch(random) {
             //Ambulance specialized in heart problems
             case 1:
-                typeOfAmbulance = "heart";
+                setTypeOfAmbulance("heart");
                 break;
             //Ambulance specialized in brain problems (like a stroke)
             case 2:
-                typeOfAmbulance = "brain";
+                setTypeOfAmbulance("brain");
                 break;
             //Ambulance specialized in dealing with broken bones or other bone health problems
             case 3:
-                typeOfAmbulance = "bones";
+                setTypeOfAmbulance("bones");
                 break;
             //Ambulance specialized in dealing with large hemorrhaging problems
             case 4:
-                typeOfAmbulance = "blood";
+                setTypeOfAmbulance("blood");
                 break;
         }
+    }
+
+    public String getTypeOfAmbulance() {
+        return typeOfAmbulance;
+    }
+
+    public void setTypeOfAmbulance(String typeOfAmbulance) {
+        this.typeOfAmbulance = typeOfAmbulance;
+    }
+
+    public String getIllness() {
+        return illness;
+    }
+
+    public void setIllness(String illness) {
+        this.illness = illness;
     }
 
     public int getX() {
@@ -105,7 +115,6 @@ public class AmbulanceAgent extends Agent{
     public int calculateCoordinate(){
         Random r = new Random();
         //int aux = r.nextInt(4) + 1;
-
         int aux = r.nextInt(8) + 1;
         //int aux = r.nextInt(16) + 1;
 
@@ -173,13 +182,12 @@ public class AmbulanceAgent extends Agent{
             Vector<String[]> allTokens = new Vector<>();
             int id;
 
-            System.out.println("");
-            System.out.println("Hospital data:");
-            System.out.println("");
-            System.out.println("| name | specialisty | position x | position y | distance |");
-            System.out.println("|------|-------------|------------|------------|----------|");
-
             try {
+                System.out.println("Hospital data:");
+                System.out.println("");
+                System.out.println("| name | specialisty | position x | position y | distance |");
+                System.out.println("|------|-------------|------------|------------|----------|");
+
                 for (int i = 0; i < responses.size(); i++) {
                     hospitalInfo = ((ACLMessage) responses.get(i)).getContent();
 
@@ -194,10 +202,46 @@ public class AmbulanceAgent extends Agent{
 
                     allTokens.add(tokens);
 
-                    System.out.println("|  " + ((ACLMessage) responses.get(i)).getSender().getLocalName() + "  |    "
-                            + tokens[0] + "    |      " + i1 + "     |      " + i2 + "     |     " +
-                            dist + "    |");
+                    String res = "";
+                    String aux = ((ACLMessage) responses.get(i)).getSender().getLocalName();
+
+                    if (aux.length() == 2){
+                        res = "|  " + aux + "  |";
+                    }else if (aux.length() > 2){
+                        res = "| " + aux + "  |";
+                    }
+
+                    res = res + "    " + tokens[0] + "    |";
+
+                    aux = tokens[1];
+
+                    if (aux.length() <= 2){
+                        res = res +  "      " + aux + "     |";
+                    }else if (aux.length() > 2){
+                        res = res +  "     " + aux + "    |";
+                    }
+
+                    aux = tokens[2];
+
+                    if (aux.length() <= 2){
+                        res = res +  "      " + aux + "     |";
+                    }else if (aux.length() > 2){
+                        res = res +  "     " + aux + "    |";
+                    }
+
+                    aux = String.valueOf(dist);
+
+                    if (aux.length() <= 2){
+                        res = res +  "     " + aux + "    |";
+                    }else if (aux.length() > 2){
+                        res = res +  "    " + aux + "   |";
+                    }
+
+                    System.out.println(res);
                 }
+
+                System.out.println("");
+
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
@@ -232,7 +276,7 @@ public class AmbulanceAgent extends Agent{
             for(int i = 0; i < tokens.size(); i++) {
                 int num = Integer.parseInt(tokens.get(i)[1]);
 
-                if(num < min && illness.equals(tokens.get(i)[0]) ) {
+                if(num < min && getIllness().equals(tokens.get(i)[0]) ) {
                     min = Integer.parseInt(tokens.get(i)[1]);
                     id = i;
                 }
@@ -255,6 +299,7 @@ public class AmbulanceAgent extends Agent{
          * @param resultNotifications - vector with all the answers
          */
         protected void handleAllResultNotifications(Vector resultNotifications) {
+
         }
 
         public int onEnd(){
@@ -275,23 +320,19 @@ public class AmbulanceAgent extends Agent{
 
         protected ACLMessage handleCfp(ACLMessage cfp) {
             String ambulanceResponse = cfp.getContent();
-
             String[] tokens = ambulanceResponse.split("-");
 
-            illness = tokens[0];
+            //illness = tokens[0];
+            setIllness(tokens[0]);
             patientX = Integer.parseInt(tokens[1]);
             patientY = Integer.parseInt(tokens[2]);
 
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-//            if (distance != 100) {
-//                distance = (int )(Math.random() * 75 + 1);
-//            }
-
             int distance = calculateDistance(x, y, patientX, patientY);
 
-            String info = typeOfAmbulance + "-" + distance + "-" + isAvailable();
+            String info = getTypeOfAmbulance() + "-" + distance + "-" + isAvailable();
             System.out.println(myAgent.getName() + " " + info);
             reply.setContent(info);
 
