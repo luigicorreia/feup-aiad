@@ -111,6 +111,22 @@ public class AmbulanceAgent extends Agent{
     public void setAvailable(boolean available) {
         this.available = available;
     }
+    
+    public int getPatientX() {
+        return patientX;
+    }
+
+    public void setPatientX(int patientX) {
+        this.patientX = patientX;
+    }
+
+    public int getPatientY() {
+        return patientY;
+    }
+
+    public void setPatientY(int patientY) {
+        this.patientY = patientY;
+    }
 
     public int calculateCoordinate(){
         Random r = new Random();
@@ -196,7 +212,7 @@ public class AmbulanceAgent extends Agent{
                     int i1 = Integer.parseInt(tokens[1]);
                     int i2 = Integer.parseInt(tokens[2]);
 
-                    int dist = calculateDistance(patientX, patientY, i1, i2);
+                    int dist = calculateDistance(getPatientX(), getPatientY(), i1, i2);
 
                     tokens[1] = Integer.toString(dist);
 
@@ -324,13 +340,13 @@ public class AmbulanceAgent extends Agent{
 
             //illness = tokens[0];
             setIllness(tokens[0]);
-            patientX = Integer.parseInt(tokens[1]);
-            patientY = Integer.parseInt(tokens[2]);
+            setPatientX(Integer.parseInt(tokens[1]));
+            setPatientY(Integer.parseInt(tokens[2]));
 
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-            int distance = calculateDistance(x, y, patientX, patientY);
+            int distance = calculateDistance(getX(), getY(), getPatientX(), getPatientY());
 
             String info = getTypeOfAmbulance() + "-" + distance + "-" + isAvailable();
             System.out.println(myAgent.getName() + " " + info);
