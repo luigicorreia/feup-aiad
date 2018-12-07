@@ -82,7 +82,7 @@ public class CentralAgent extends Agent {
             addBehaviour(new CallBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
 
             System.out.println("");
-            System.out.println("Central received call. Patient is at " + patientX + "-" + patientY);
+            System.out.println("Central received call. Patient is at [" + patientX + "," + patientY + "]");
             System.out.println("");
 
             reply.setPerformative(ACLMessage.AGREE);
@@ -158,11 +158,6 @@ public class CentralAgent extends Agent {
             Vector<String[]> allTokens = new Vector<>();
 
             try {
-                /*
-                System.out.println("");
-                System.out.println("Information about the available ambulances: ");
-                */
-
                 System.out.println("");
                 System.out.println("Ambulance data:");
                 System.out.println("");
