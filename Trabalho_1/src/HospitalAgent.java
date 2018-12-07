@@ -17,7 +17,7 @@ public class HospitalAgent extends Agent {
     private int myAgentID = 0;
     private int x;
     private int y;
-    String specialty = "";
+    private String specialty = "";
 
     public void setup(){
         addBehaviour(new HospitalBehaviour(this, MessageTemplate.MatchPerformative((ACLMessage.CFP))));
@@ -43,18 +43,26 @@ public class HospitalAgent extends Agent {
 
         switch (random) {
             case 1:
-                specialty = "heart";
+                setSpecialty("heart");
                 break;
             case 2:
-                specialty = "brain";
+                setSpecialty("brain");
                 break;
             case 3:
-                specialty = "bones";
+                setSpecialty("bones");
                 break;
             case 4:
-                specialty = "blood";
+                setSpecialty("blood");
                 break;
         }
+    }
+
+    public String getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
     }
 
     public int getX() {
@@ -100,16 +108,7 @@ public class HospitalAgent extends Agent {
             aux = calculateCoordinate();
             setY(aux);
 
-            /*
-            System.out.println("");
-            System.out.println("Hospital");
-            System.out.println("x = " + getX());
-            System.out.println("y = " + getY());
-            System.out.println("");
-            */
-
-
-            String info = specialty + "-" + Integer.toString(x) + "-" + Integer.toString(y);
+            String info = getSpecialty() + "-" + Integer.toString(getX()) + "-" + Integer.toString(getY());
 
             reply.setContent(info);
 
@@ -117,6 +116,7 @@ public class HospitalAgent extends Agent {
         }
 
         protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
+
         }
 
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
@@ -124,6 +124,7 @@ public class HospitalAgent extends Agent {
 
             try {
                 System.out.println(myAgent.getLocalName() + " got an accept!");
+
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
                 result.setContent("this is the result");
