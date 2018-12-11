@@ -190,7 +190,7 @@ public class CentralAgent extends Agent {
         public void writeData(Vector<String[]> alltokens) throws IOException {
 
             String csvFile = "../data.csv";
-            FileWriter writer = new FileWriter(csvFile);
+            FileWriter writer = new FileWriter(csvFile, true);
             for(int i = 0; i < alltokens.size(); i++){
                 String[] tokens = alltokens.get(i);
 
@@ -202,8 +202,6 @@ public class CentralAgent extends Agent {
                 CSVUtils.writeLine(writer, list);
             }
 
-
-            writer.flush();
             writer.close();
 
 
@@ -245,12 +243,35 @@ public class CentralAgent extends Agent {
 
                     aux = tokens[1];
 
+                    if (aux.length() <= 2){
+                        res = res +  "      " + aux + "     |";
+                    }else if (aux.length() > 2){
+                        res = res +  "     " + aux + "    |";
+                    }
+
+                    aux = tokens[2];
+
+                    if (aux.length() <= 2){
+                        res = res +  "      " + aux + "     |";
+                    }else if (aux.length() > 2){
+                        res = res +  "     " + aux + "    |";
+                    }
+/*
+                    aux = String.valueOf(dist);
+                    if (aux.length() <= 2){
+                        res = res +  "     " + aux + "    |";
+                    }else if (aux.length() > 2){
+                        res = res +  "    " + aux + "   |";
+                    }
+*/
+                    System.out.println(res);
+
+                    /*
                     System.out.println("|  " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
-                            "  |    " + tokens[0] +"    |      " + tokens[1] +
-                            "     |      " + tokens[2] + "     |     " +
-                            "d" + "    |");
-
-
+                            "  |    " + tokens[0] +"    |      " + tokens[1] +
+                            "     |      " + tokens[2] + "     |     " +
+                            "d" + "    |");
+                    */
                 }
             }
             catch (NullPointerException e) {
@@ -260,6 +281,12 @@ public class CentralAgent extends Agent {
             System.out.println("");
 
             int id = analyzeInfo(allTokens);
+
+            try {
+                writeData(allTokens);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             if (id == -1){
                 System.out.println("Não existem ambulâncias disponíveis");
@@ -305,11 +332,10 @@ public class CentralAgent extends Agent {
             boolean noAmbulanceAvailable = true;
 
             for(int i = 0; i < tokens.size(); i++) {
-                System.out.println(tokens.get(i)[2]);
-                if (tokens.get(i)[2].equals("true")){
+                if (tokens.get(i)[3].equals("true")){
                     int num = Integer.parseInt(tokens.get(i)[1]);
 
-                    if(num < min && patientIllness.equals(tokens.get(i)[0])) {
+                    if(num < min && getPatientIllness().equals(tokens.get(i)[0])) {
                         min = Integer.parseInt(tokens.get(i)[1]);
                         id = i;
                     }
@@ -325,7 +351,7 @@ public class CentralAgent extends Agent {
 
             if (noAmbulanceAvailable == true){
                 return -1;
-            } else if(id == -1 && tokens.get(id2op)[2].equals("true")){
+            } else if(id == -1 && tokens.get(id2op)[3].equals("true")){
                 id = id2op;
             }
 
