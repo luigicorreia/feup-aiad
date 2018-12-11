@@ -8,6 +8,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 import jade.proto.ContractNetInitiator;
 import javafx.util.Pair;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.util.Vector;
 
@@ -24,6 +25,38 @@ public class CentralAgent extends Agent {
     private String patientIllness="";
     private int patientX = 0;
     private int patientY = 0;
+
+    public Vector<String> getPatientIllnesses() {
+        return patientIllnesses;
+    }
+
+    public void setPatientIllnesses(Vector<String> patientIllnesses) {
+        this.patientIllnesses = patientIllnesses;
+    }
+
+    public String getPatientIllness() {
+        return patientIllness;
+    }
+
+    public void setPatientIllness(String patientIllness) {
+        this.patientIllness = patientIllness;
+    }
+
+    public int getPatientX() {
+        return patientX;
+    }
+
+    public void setPatientX(int patientX) {
+        this.patientX = patientX;
+    }
+
+    public int getPatientY() {
+        return patientY;
+    }
+
+    public void setPatientY(int patientY) {
+        this.patientY = patientY;
+    }
 
     /**
      * This function prepare the Central Agent.
@@ -75,14 +108,14 @@ public class CentralAgent extends Agent {
 
             String[] tokens = patientRequest.split("-");
 
-            patientIllness = tokens[0];
-            patientX = Integer.parseInt(tokens[1]);
-            patientY = Integer.parseInt(tokens[2]);
+            setPatientIllness(tokens[0]);
+            setPatientX(Integer.parseInt(tokens[1]));
+            setPatientY(Integer.parseInt(tokens[2]));
 
             addBehaviour(new CallBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
 
             System.out.println("");
-            System.out.println("Central received call. Patient is at [" + patientX + "," + patientY + "]");
+            System.out.println("Central received call. Patient is at [" + getPatientX() + "," + getPatientY() + "]");
             System.out.println("");
 
             reply.setPerformative(ACLMessage.AGREE);
@@ -141,10 +174,10 @@ public class CentralAgent extends Agent {
             }
 
             System.out.println("Sending ambulance request ...");
-            System.out.println("Problem: " + patientIllness);
+            System.out.println("Problem: " + getPatientIllness());
             System.out.println("");
 
-            cfp.setContent(patientIllness + "-" + patientX + "-" + patientY);
+            cfp.setContent(getPatientIllness() + "-" + getPatientX() + "-" + getPatientY());
 
             v.add(cfp);
 
@@ -154,11 +187,11 @@ public class CentralAgent extends Agent {
         protected void handleAllResponses(Vector responses, Vector acceptances) {
             System.out.println("");
             System.out.println("Central got " + responses.size() + " responses!");
+            System.out.println("");
 
             Vector<String[]> allTokens = new Vector<>();
 
             try {
-                System.out.println("");
                 System.out.println("Ambulance data:");
                 System.out.println("");
                 System.out.println("| name | specialisty | position x | position y | distance |");
@@ -173,13 +206,50 @@ public class CentralAgent extends Agent {
 
                     allTokens.add(tokens);
 
+                    String res = "";
+                    String aux = ((ACLMessage) responses.get(i)).getSender().getLocalName();
 
+                    if (aux.length() == 2){
+                        res = "|  " + aux + "  |";
+                    }else if (aux.length() > 2){
+                        res = "| " + aux + "  |";
+                    }
+
+                    res = res + "    " + tokens[0] + "    |";
+
+                    aux = tokens[1];
+
+                    if (aux.length() <= 2){
+                        res = res +  "      " + aux + "     |";
+                    }else if (aux.length() > 2){
+                        res = res +  "     " + aux + "    |";
+                    }
+
+                    aux = tokens[2];
+
+                    if (aux.length() <= 2){
+                        res = res +  "      " + aux + "     |";
+                    }else if (aux.length() > 2){
+                        res = res +  "     " + aux + "    |";
+                    }
+/*
+                    aux = String.valueOf(dist);
+
+                    if (aux.length() <= 2){
+                        res = res +  "     " + aux + "    |";
+                    }else if (aux.length() > 2){
+                        res = res +  "    " + aux + "   |";
+                    }
+*/
+                    System.out.println(res);
+
+                    /*
                     System.out.println("|  " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
                             "  |    " + tokens[0] +"    |      " + tokens[1] +
                             "     |      " + tokens[2] + "     |     " +
                             "d" + "    |");
 
-
+                    */
                 }
             }
             catch (NullPointerException e) {
@@ -234,11 +304,10 @@ public class CentralAgent extends Agent {
             boolean noAmbulanceAvailable = true;
 
             for(int i = 0; i < tokens.size(); i++) {
-                System.out.println(tokens.get(i)[2]);
-                if (tokens.get(i)[2].equals("true")){
+                if (tokens.get(i)[3].equals("true")){
                     int num = Integer.parseInt(tokens.get(i)[1]);
 
-                    if(num < min && patientIllness.equals(tokens.get(i)[0])) {
+                    if(num < min && getPatientIllness().equals(tokens.get(i)[0])) {
                         min = Integer.parseInt(tokens.get(i)[1]);
                         id = i;
                     }
@@ -254,17 +323,14 @@ public class CentralAgent extends Agent {
 
             if (noAmbulanceAvailable == true){
                 return -1;
-            } else if(id == -1 && tokens.get(id2op)[2].equals("true")){
+            } else if(id == -1 && tokens.get(id2op)[3].equals("true")){
                 id = id2op;
             }
-
 
             return id;
         }
 
         public int onEnd(){
-            //System.out.println("contract net central");
-            //System.out.println("*exit " + myAgent.getLocalName() + " *");
             return super.onEnd();
         }
     }
