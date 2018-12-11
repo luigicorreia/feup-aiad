@@ -8,6 +8,7 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.AchieveREResponder;
 import jade.proto.ContractNetInitiator;
 import javafx.util.Pair;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,7 +29,37 @@ public class CentralAgent extends Agent {
     private int patientX = 0;
     private int patientY = 0;
 
+    public Vector<String> getPatientIllnesses() {
+        return patientIllnesses;
+    }
 
+    public void setPatientIllnesses(Vector<String> patientIllnesses) {
+        this.patientIllnesses = patientIllnesses;
+    }
+
+    public String getPatientIllness() {
+        return patientIllness;
+    }
+
+    public void setPatientIllness(String patientIllness) {
+        this.patientIllness = patientIllness;
+    }
+
+    public int getPatientX() {
+        return patientX;
+    }
+
+    public void setPatientX(int patientX) {
+        this.patientX = patientX;
+    }
+
+    public int getPatientY() {
+        return patientY;
+    }
+
+    public void setPatientY(int patientY) {
+        this.patientY = patientY;
+    }
 
     /**
      * This function prepare the Central Agent.
@@ -181,16 +212,15 @@ public class CentralAgent extends Agent {
         protected void handleAllResponses(Vector responses, Vector acceptances) {
             System.out.println("");
             System.out.println("Central got " + responses.size() + " responses!");
+            System.out.println("");
 
             Vector<String[]> allTokens = new Vector<>();
-
-
 
             try {
                 System.out.println("");
                 System.out.println("Ambulance data:");
                 System.out.println("");
-                System.out.println("| name | specialty | position x | position y | distance |");
+                System.out.println("| name | specialisty | position x | position y | distance |");
                 System.out.println("|------|-------------|------------|------------|----------|");
 
                 for (int i = 0; i < responses.size(); i++) {
@@ -202,8 +232,18 @@ public class CentralAgent extends Agent {
 
                     allTokens.add(tokens);
 
+                    String res = "";
+                    String aux = ((ACLMessage) responses.get(i)).getSender().getLocalName();
 
+                    if (aux.length() == 2){
+                        res = "|  " + aux + "  |";
+                    }else if (aux.length() > 2){
+                        res = "| " + aux + "  |";
+                    }
 
+                    res = res + "    " + tokens[0] + "    |";
+
+                    aux = tokens[1];
 
                     System.out.println("|  " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
                             "  |    " + tokens[0] +"    |      " + tokens[1] +
@@ -218,11 +258,6 @@ public class CentralAgent extends Agent {
             }
 
             System.out.println("");
-            try {
-                writeData(allTokens);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
             int id = analyzeInfo(allTokens);
 

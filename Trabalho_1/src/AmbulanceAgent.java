@@ -111,7 +111,7 @@ public class AmbulanceAgent extends Agent{
     public void setAvailable(boolean available) {
         this.available = available;
     }
-    
+
     public int getPatientX() {
         return patientX;
     }
@@ -208,6 +208,7 @@ public class AmbulanceAgent extends Agent{
                     hospitalInfo = ((ACLMessage) responses.get(i)).getContent();
 
                     String[] tokens = hospitalInfo.split("-");
+
 
                     int i1 = Integer.parseInt(tokens[1]);
                     int i2 = Integer.parseInt(tokens[2]);
@@ -348,8 +349,8 @@ public class AmbulanceAgent extends Agent{
 
             int distance = calculateDistance(getX(), getY(), getPatientX(), getPatientY());
 
-            String info = getTypeOfAmbulance() + "-" + distance + "-" + isAvailable();
-            System.out.println(myAgent.getName() + " " + info);
+            String info = getTypeOfAmbulance() + "-" + getX() + "-" + getY() + "-" + isAvailable();
+            //System.out.println(myAgent.getName() + " " + info);
             reply.setContent(info);
 
             return reply;
