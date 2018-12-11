@@ -7,7 +7,10 @@ import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Vector;
+import java.io.FileWriter;
 
 public class main {
 
@@ -66,6 +69,7 @@ public class main {
 
         //Central Agent
         AgentController c1, c2;
+
 
         try {
             h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
@@ -138,6 +142,7 @@ public class main {
 //            p2.start();
 //            p3.start();
 //            p4.start();
+
 
 
         } catch (StaleProxyException e) {

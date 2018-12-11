@@ -9,7 +9,10 @@ import jade.proto.AchieveREResponder;
 import jade.proto.ContractNetInitiator;
 import javafx.util.Pair;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Vector;
+import java.util.*;
 
 /**
  * This class represents the Central of Emergency.
@@ -24,6 +27,8 @@ public class CentralAgent extends Agent {
     private String patientIllness="";
     private int patientX = 0;
     private int patientY = 0;
+
+
 
     /**
      * This function prepare the Central Agent.
@@ -151,17 +156,41 @@ public class CentralAgent extends Agent {
             return v;
         }
 
+        public void writeData(Vector<String[]> alltokens) throws IOException {
+
+            String csvFile = "../data.csv";
+            FileWriter writer = new FileWriter(csvFile);
+            for(int i = 0; i < alltokens.size(); i++){
+                String[] tokens = alltokens.get(i);
+
+                List<String> list = new ArrayList<>();
+                list.add(tokens[0]);
+                list.add(tokens[1]);
+                list.add(tokens[2]);
+
+                CSVUtils.writeLine(writer, list);
+            }
+
+
+            writer.flush();
+            writer.close();
+
+
+        }
+
         protected void handleAllResponses(Vector responses, Vector acceptances) {
             System.out.println("");
             System.out.println("Central got " + responses.size() + " responses!");
 
             Vector<String[]> allTokens = new Vector<>();
 
+
+
             try {
                 System.out.println("");
                 System.out.println("Ambulance data:");
                 System.out.println("");
-                System.out.println("| name | specialisty | position x | position y | distance |");
+                System.out.println("| name | specialty | position x | position y | distance |");
                 System.out.println("|------|-------------|------------|------------|----------|");
 
                 for (int i = 0; i < responses.size(); i++) {
@@ -172,6 +201,8 @@ public class CentralAgent extends Agent {
                     String[] tokens = ambulanceResponse.split("-");
 
                     allTokens.add(tokens);
+
+
 
 
                     System.out.println("|  " + ((ACLMessage) responses.get(i)).getSender().getLocalName() +
@@ -187,6 +218,11 @@ public class CentralAgent extends Agent {
             }
 
             System.out.println("");
+            try {
+                writeData(allTokens);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             int id = analyzeInfo(allTokens);
 
