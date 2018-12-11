@@ -215,8 +215,6 @@ public class AmbulanceAgent extends Agent{
 
                     int dist = calculateDistance(getPatientX(), getPatientY(), i1, i2);
 
-                    tokens[1] = Integer.toString(dist);
-
                     allTokens.add(tokens);
 
                     String res = "";
@@ -349,7 +347,7 @@ public class AmbulanceAgent extends Agent{
 
             int distance = calculateDistance(getX(), getY(), getPatientX(), getPatientY());
 
-            String info = getTypeOfAmbulance() + "-" + getX() + "-" + getY() + "-" + isAvailable();
+            String info = getTypeOfAmbulance() + "-" + getX() + "-" + getY() + "-" + isAvailable() + "-" + distance;
             //System.out.println(myAgent.getName() + " " + info);
             reply.setContent(info);
 

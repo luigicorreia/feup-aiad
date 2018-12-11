@@ -55,6 +55,12 @@ public class HospitalAgent extends Agent {
                 setSpecialty("blood");
                 break;
         }
+
+        int aux = calculateCoordinate();
+        setX(aux);
+
+        aux = calculateCoordinate();
+        setY(aux);
     }
 
     public String getSpecialty() {
@@ -66,7 +72,7 @@ public class HospitalAgent extends Agent {
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public void setX(int x) {
@@ -74,7 +80,7 @@ public class HospitalAgent extends Agent {
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 
     public void setY(int y) {
@@ -102,11 +108,6 @@ public class HospitalAgent extends Agent {
             ACLMessage reply = cfp.createReply();
             reply.setPerformative(ACLMessage.PROPOSE);
 
-            int aux = calculateCoordinate();
-            setX(aux);
-
-            aux = calculateCoordinate();
-            setY(aux);
 
             String info = getSpecialty() + "-" + Integer.toString(getX()) + "-" + Integer.toString(getY());
 
