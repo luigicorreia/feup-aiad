@@ -9,6 +9,7 @@ import jade.wrapper.StaleProxyException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Vector;
 import java.io.FileWriter;
 
@@ -25,7 +26,11 @@ public class main {
     private static Profile profileCentral;
 
     public static void main(String args[]){
-
+       /* try {
+            writeHeader();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } */
         jade_initializer();
         start_world();
 
@@ -51,6 +56,7 @@ public class main {
         acPatients = rt.createAgentContainer(profilePatients); // Patients Container
         acAmbulances = rt.createAgentContainer(profileAmbulances); // Ambulances Container
         acCentral = rt.createAgentContainer(profileCentral); //Central Container
+
     }
 
     public static void start_world() {
@@ -61,7 +67,7 @@ public class main {
         AgentController h1,h2,h3,h4,h5, h6, h7, h8, h9, h10;
 
         //Patient Agents
-        AgentController p1, p2, p3, p4, p5;
+        AgentController p1, p2, p3, p4, p5, p6, p7, p8, p9, p10;
 
 
         //Ambulance Agents
@@ -90,6 +96,12 @@ public class main {
             p3 = acPatients.createNewAgent("p3", "PatientAgent", args); // Patient Agent
             p4 = acPatients.createNewAgent("p4", "PatientAgent", args); // Patient Agent
             p5 = acPatients.createNewAgent("p5", "PatientAgent", args); // Patient Agent
+            p6 = acPatients.createNewAgent("p6", "PatientAgent", args); // Patient Agent
+            p7 = acPatients.createNewAgent("p7", "PatientAgent", args); // Patient Agent
+            p8 = acPatients.createNewAgent("p8", "PatientAgent", args); // Patient Agent
+            p9 = acPatients.createNewAgent("p9", "PatientAgent", args); // Patient Agent
+            p10 = acPatients.createNewAgent("p10", "PatientAgent", args); // Patient Agent
+
 
 
             c1 = acCentral.createNewAgent("c", "CentralAgent", args);
@@ -99,13 +111,6 @@ public class main {
             a3 = acAmbulances.createNewAgent("a3", "AmbulanceAgent", args); //Ambulance Agent
             a4 = acAmbulances.createNewAgent("a4", "AmbulanceAgent", args); //Ambulance Agent
             a5 = acAmbulances.createNewAgent("a5", "AmbulanceAgent", args); //Ambulance Agent
-            a6 = acAmbulances.createNewAgent("a6", "AmbulanceAgent", args); //Ambulance Agent
-            a7 = acAmbulances.createNewAgent("a7", "AmbulanceAgent", args); //Ambulance Agent
-            a8 = acAmbulances.createNewAgent("a8", "AmbulanceAgent", args); //Ambulance Agent
-            a9 = acAmbulances.createNewAgent("a9", "AmbulanceAgent", args); //Ambulance Agent
-            a10 = acAmbulances.createNewAgent("a10", "AmbulanceAgent", args); //Ambulance Agent
-            a11 = acAmbulances.createNewAgent("a11", "AmbulanceAgent", args); //Ambulance Agent
-
 
             c1.start();
 
@@ -121,13 +126,7 @@ public class main {
             a2.start();
             a3.start();
             a4.start();
-//            a5.start();
-//            a6.start();
-//            a7.start();
-//            a8.start();
-//            a9.start();
-//            a10.start();
-//            a11.start();
+            a5.start();
 
 
             Vector<AgentController> patients = new Vector();
@@ -135,8 +134,8 @@ public class main {
             patients.add(p1);
             patients.add(p2);
             patients.add(p3);
-//            patients.add(p4);
-//            patients.add(p5);
+            patients.add(p4);
+            patients.add(p5);
 
             pc.schedulePatient(patients);
 //            p2.start();
@@ -148,5 +147,13 @@ public class main {
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void writeHeader() throws IOException {
+        String csvFile = "../data.csv";
+        FileWriter writer = new FileWriter(csvFile, true);
+        CSVUtils.writeLine(writer, Arrays.asList("ID", "Specialty", "X Position", "Y Position"), true);
+        writer.close();
+
     }
 }

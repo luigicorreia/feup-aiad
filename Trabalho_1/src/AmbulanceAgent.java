@@ -8,6 +8,10 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetInitiator;
 import jade.proto.ContractNetResponder;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -190,13 +194,41 @@ public class AmbulanceAgent extends Agent{
             return v;
         }
 
+        public void writeData(Vector<String> names, int id) throws IOException {
+
+
+            for(int i = 0; i < names.size(); i++){
+
+                //ArrayList<String> list = Info.info.get(i);
+                Info.info.get(i).add(names.get(i));
+                if (i == id)
+                    Info.info.get(i).add("Yes");
+                else
+                    Info.info.get(i).add("No");
+            }
+
+            String csvFile = "data.csv";
+            FileWriter writer = new FileWriter(csvFile, true);
+
+            for(int i = 0; i < Info.info.size(); i++){
+                CSVUtils.writeLine(writer, Info.info.get(i), true);
+            }
+
+            writer.close();
+
+
+        }
+
+
         /*
         * Handles the responses from the hospital
         */
         protected void handleAllResponses(Vector responses, Vector acceptances) {
             String hospitalInfo;
             Vector<String[]> allTokens = new Vector<>();
+            Vector<String> hospitalNames = new Vector<>();
             int id;
+            String hospitalStatus = "";
 
             try {
                 System.out.println("Hospital data:");
@@ -209,7 +241,6 @@ public class AmbulanceAgent extends Agent{
 
                     String[] tokens = hospitalInfo.split("-");
 
-
                     int i1 = Integer.parseInt(tokens[1]);
                     int i2 = Integer.parseInt(tokens[2]);
 
@@ -219,6 +250,7 @@ public class AmbulanceAgent extends Agent{
 
                     String res = "";
                     String aux = ((ACLMessage) responses.get(i)).getSender().getLocalName();
+                    hospitalNames.add(aux);
 
                     if (aux.length() == 2){
                         res = "|  " + aux + "  |";
@@ -255,6 +287,8 @@ public class AmbulanceAgent extends Agent{
                     System.out.println(res);
                 }
 
+
+
                 System.out.println("");
 
             } catch (NullPointerException e) {
@@ -262,6 +296,7 @@ public class AmbulanceAgent extends Agent{
             }
 
             id = analyzeInfo(allTokens);
+
 
 
             ACLMessage msg = ((ACLMessage) responses.get(id)).createReply();
@@ -275,6 +310,12 @@ public class AmbulanceAgent extends Agent{
                     acceptances.add(msg2);
                 }
             }
+
+           /* try {
+                writeData(hospitalNames, id);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }*/
         }
 
         /**
@@ -358,12 +399,29 @@ public class AmbulanceAgent extends Agent{
             try {
                 System.out.println(myAgent.getLocalName() + " got a reject...");
 
+
                 ACLMessage result = reject.createReply();
                 result.setPerformative(ACLMessage.INFORM);
                 result.setContent("this is the result");
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
+        }
+
+        public void writeData(String name) throws IOException {
+
+            String csvFile = "data.csv";
+            FileWriter writer = new FileWriter(csvFile, true);
+
+
+            List <String> list = new ArrayList<>();
+            list.add(name);
+
+            CSVUtils.writeLine(writer, list, false);
+
+
+            writer.close();
+
         }
 
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {

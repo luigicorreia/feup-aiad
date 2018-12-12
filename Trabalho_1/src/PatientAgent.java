@@ -7,6 +7,10 @@ import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
 import jade.proto.AchieveREInitiator;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
@@ -41,6 +45,7 @@ public class PatientAgent extends Agent {
 
         generateIllness();
     }
+
 
     public int getX() {
         return x;
@@ -100,6 +105,7 @@ public class PatientAgent extends Agent {
             super(a, msg);
         }
 
+
         protected Vector<ACLMessage> prepareRequests(ACLMessage msg) {
             Vector<ACLMessage> v = new Vector<ACLMessage>();
 
@@ -107,6 +113,7 @@ public class PatientAgent extends Agent {
             ServiceDescription sd = new ServiceDescription();
             sd.setType("central");
             template.addServices(sd);
+
 
             try {
                 DFAgentDescription[] result = DFService.search(myAgent, template);
@@ -121,7 +128,7 @@ public class PatientAgent extends Agent {
                 fe.printStackTrace();
             }
 
-            msg.setContent(patientIllness + "-" + Integer.toString(x) + "-" + Integer.toString(y));
+            msg.setContent(patientIllness + "-" + Integer.toString(x) + "-" + Integer.toString(y) + "-" + getLocalName());
             v.add(msg);
 
             return v;
@@ -134,5 +141,6 @@ public class PatientAgent extends Agent {
         public int onEnd(){
             return super.onEnd();
         }
+
     }
 }

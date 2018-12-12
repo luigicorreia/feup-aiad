@@ -7,6 +7,10 @@ import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.ContractNetResponder;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -120,12 +124,27 @@ public class HospitalAgent extends Agent {
 
         }
 
+        public void writeData(String name) throws IOException {
+
+            String csvFile = "data.csv";
+            FileWriter writer = new FileWriter(csvFile, true);
+
+
+            List<String> list = new ArrayList<>();
+            list.add(name);
+
+            CSVUtils.writeLine(writer, list, true);
+
+
+            writer.close();
+
+        }
+
         protected ACLMessage handleAcceptProposal(ACLMessage cfp, ACLMessage propose, ACLMessage accept) {
             ACLMessage nullMessage = new ACLMessage();
 
             try {
                 System.out.println(myAgent.getLocalName() + " got an accept!");
-
                 ACLMessage result = accept.createReply();
                 result.setPerformative(ACLMessage.INFORM);
                 result.setContent("this is the result");

@@ -28,6 +28,7 @@ public class CentralAgent extends Agent {
     private String patientIllness="";
     private int patientX = 0;
     private int patientY = 0;
+    private String id = "";
 
     public Vector<String> getPatientIllnesses() {
         return patientIllnesses;
@@ -114,6 +115,7 @@ public class CentralAgent extends Agent {
             patientIllness = tokens[0];
             patientX = Integer.parseInt(tokens[1]);
             patientY = Integer.parseInt(tokens[2]);
+            id = tokens[3];
 
             addBehaviour(new CallBehaviour(myAgent, new ACLMessage(ACLMessage.CFP)));
 
@@ -187,19 +189,33 @@ public class CentralAgent extends Agent {
             return v;
         }
 
-        public void writeData(Vector<String[]> alltokens) throws IOException {
+        public void writeData(Vector<String[]> alltokens, Vector<String> ambulances, int id2) throws IOException {
 
-            String csvFile = "../data.csv";
+            String csvFile = "data.csv";
             FileWriter writer = new FileWriter(csvFile, true);
             for(int i = 0; i < alltokens.size(); i++){
                 String[] tokens = alltokens.get(i);
 
-                List<String> list = new ArrayList<>();
+                ArrayList <String> list = new ArrayList<>();
+
+                list.add(id);
+                list.add(patientIllness);
+                list.add(Integer.toString(patientX));
+                list.add(Integer.toString(patientY));
+                list.add(ambulances.get(i));
                 list.add(tokens[0]);
                 list.add(tokens[1]);
                 list.add(tokens[2]);
+                list.add(tokens[3]);
 
-                CSVUtils.writeLine(writer, list);
+                if (i == id2)
+                    list.add("Yes");
+                else
+                    list.add("No");
+
+                Info.info.add(list);
+
+                CSVUtils.writeLine(writer, list, true);
             }
 
             writer.close();
@@ -213,12 +229,14 @@ public class CentralAgent extends Agent {
             System.out.println("");
 
             Vector<String[]> allTokens = new Vector<>();
+            Vector<String> ambulanceNames = new Vector<>();
+            String ambulanceStatus = "No";
 
             try {
                 System.out.println("");
                 System.out.println("Ambulance data:");
                 System.out.println("");
-                System.out.println("| name | specialisty | position x | position y | distance |");
+                System.out.println("| name | specialty | position x | position y | distance |");
                 System.out.println("|------|-------------|------------|------------|----------|");
 
                 for (int i = 0; i < responses.size(); i++) {
@@ -228,10 +246,14 @@ public class CentralAgent extends Agent {
 
                     String[] tokens = ambulanceResponse.split("-");
 
-                    allTokens.add(tokens);
 
                     String res = "";
                     String aux = ((ACLMessage) responses.get(i)).getSender().getLocalName();
+
+
+                    allTokens.add(tokens);
+                    ambulanceNames.add(aux);
+
 
                     if (aux.length() == 2){
                         res = "|  " + aux + "  |";
@@ -282,11 +304,7 @@ public class CentralAgent extends Agent {
 
             int id = analyzeInfo(allTokens);
 
-            try {
-                writeData(allTokens);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
 
             if (id == -1){
                 System.out.println("Não existem ambulâncias disponíveis");
@@ -297,13 +315,18 @@ public class CentralAgent extends Agent {
             msg.setPerformative(ACLMessage.ACCEPT_PROPOSAL);
             acceptances.add(msg);
 
-
             for (int i = 0; i < responses.size(); i++) {
                 if (i != id){
                     ACLMessage msg2 = ((ACLMessage) responses.get(i)).createReply();
                     msg2.setPerformative(ACLMessage.REJECT_PROPOSAL);
                     acceptances.add(msg2);
                 }
+            }
+
+            try {
+                writeData(allTokens, ambulanceNames, id);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 

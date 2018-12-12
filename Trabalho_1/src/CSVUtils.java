@@ -7,12 +7,12 @@ public class CSVUtils {
 
     private static final char DEFAULT_SEPARATOR = ',';
 
-    public static void writeLine(Writer w, List<String> values) throws IOException {
-        writeLine(w, values, DEFAULT_SEPARATOR, ' ');
+    public static void writeLine(Writer w, List<String> values, boolean first) throws IOException {
+        writeLine(w, values, DEFAULT_SEPARATOR, ' ', first);
     }
 
     public static void writeLine(Writer w, List<String> values, char separators) throws IOException {
-        writeLine(w, values, separators, ' ');
+        writeLine(w, values, separators, ' ', true);
     }
 
     //https://tools.ietf.org/html/rfc4180
@@ -26,9 +26,7 @@ public class CSVUtils {
 
     }
 
-    public static void writeLine(Writer w, List<String> values, char separators, char customQuote) throws IOException {
-
-        boolean first = true;
+    public static void writeLine(Writer w, List<String> values, char separators, char customQuote, boolean first) throws IOException {
 
         //default customQuote is empty
 
