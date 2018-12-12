@@ -62,6 +62,7 @@ public class main {
 
         //Patient Agents
         AgentController p1, p2, p3, p4, p5;
+        AgentController p6, p7, p8, p9, p10;
 
 
         //Ambulance Agents
@@ -121,13 +122,13 @@ public class main {
             a2.start();
             a3.start();
             a4.start();
-//            a5.start();
-//            a6.start();
-//            a7.start();
-//            a8.start();
-//            a9.start();
-//            a10.start();
-//            a11.start();
+            a5.start();
+            a6.start();
+            a7.start();
+            a8.start();
+            a9.start();
+            a10.start();
+            //a11.start();
 
 
             Vector<AgentController> patients = new Vector();
