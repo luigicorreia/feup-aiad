@@ -194,27 +194,38 @@ public class AmbulanceAgent extends Agent{
             return v;
         }
 
-        public void writeData(Vector<String> names, int id) throws IOException {
-
-
-            for(int i = 0; i < names.size(); i++){
-
-                //ArrayList<String> list = Info.info.get(i);
-                Info.info.get(i).add(names.get(i));
-                if (i == id)
-                    Info.info.get(i).add("Yes");
-                else
-                    Info.info.get(i).add("No");
-            }
+        public void writeData(Vector<String> names, int id, Vector<Integer> hospitalXPositions, Vector<Integer> hospitalYPositions) throws IOException {
 
             String csvFile = "data.csv";
             FileWriter writer = new FileWriter(csvFile, true);
 
-            for(int i = 0; i < Info.info.size(); i++){
+            for(int i = 0; i < names.size(); i++) {
+
+                //ArrayList<String> list = Info.info.get(i);
+                Info.info.get(i).add(names.get(i));
+
+                Info.info.get(i).add(Integer.toString(hospitalXPositions.get(i)));
+                Info.info.get(i).add(Integer.toString(hospitalYPositions.get(i)));
+
+
+
+                if (i == id)
+                    Info.info.get(i).add("Yes");
+                else
+                    Info.info.get(i).add("No");
+
                 CSVUtils.writeLine(writer, Info.info.get(i), true);
+
             }
 
+
+
+//            for(int i = 0; i < Info.info.size(); i++){
+//                CSVUtils.writeLine(writer, Info.info.get(i), true);
+//            }
+
             writer.close();
+            Info.info.clear();
 
 
         }
@@ -227,6 +238,8 @@ public class AmbulanceAgent extends Agent{
             String hospitalInfo;
             Vector<String[]> allTokens = new Vector<>();
             Vector<String> hospitalNames = new Vector<>();
+            Vector<Integer> hospitalXPositions = new Vector<Integer>();
+            Vector<Integer> hospitalYPositions = new Vector<Integer>();
             int id;
             String hospitalStatus = "";
 
@@ -251,6 +264,9 @@ public class AmbulanceAgent extends Agent{
                     String res = "";
                     String aux = ((ACLMessage) responses.get(i)).getSender().getLocalName();
                     hospitalNames.add(aux);
+
+                    hospitalXPositions.add(i1);
+                    hospitalYPositions.add(i2);
 
                     if (aux.length() == 2){
                         res = "|  " + aux + "  |";
@@ -311,11 +327,11 @@ public class AmbulanceAgent extends Agent{
                 }
             }
 
-           /* try {
-                writeData(hospitalNames, id);
+           try {
+                writeData(hospitalNames, id, hospitalXPositions, hospitalYPositions);
             } catch (IOException e) {
                 e.printStackTrace();
-            }*/
+            }
         }
 
         /**

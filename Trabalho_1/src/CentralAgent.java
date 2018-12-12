@@ -215,7 +215,7 @@ public class CentralAgent extends Agent {
 
                 Info.info.add(list);
 
-                CSVUtils.writeLine(writer, list, true);
+                //CSVUtils.writeLine(writer, list, true);
             }
 
             writer.close();
