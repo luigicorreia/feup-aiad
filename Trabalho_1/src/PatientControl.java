@@ -41,7 +41,7 @@ public class PatientControl {
             public void run() {
                 beeperHandle.cancel(true);
             }
-        }, 20, SECONDS);
+        }, 1000, SECONDS);
     }
 
 

@@ -94,7 +94,7 @@ public class HospitalAgent extends Agent {
     public int calculateCoordinate(){
         Random r = new Random();
         //int aux = r.nextInt(4) + 1;
-        int aux = r.nextInt(8) + 1;
+        int aux = r.nextInt(100) + 1;
         //int aux = r.nextInt(16) + 1;
 
         return aux;
@@ -121,6 +121,16 @@ public class HospitalAgent extends Agent {
         }
 
         protected void handleRejectProposal(ACLMessage cfp, ACLMessage propose, ACLMessage reject) {
+//            try {
+//                System.out.println(myAgent.getLocalName() + " got a reject...");
+//
+//
+//                ACLMessage result = reject.createReply();
+//                result.setPerformative(ACLMessage.INFORM);
+//                result.setContent("this is the result");
+//            } catch (NullPointerException e) {
+//                e.printStackTrace();
+//            }
 
         }
 

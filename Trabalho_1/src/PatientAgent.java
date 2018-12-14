@@ -93,7 +93,7 @@ public class PatientAgent extends Agent {
         Random r = new Random();
         //int aux = r.nextInt(4) + 1;
 
-        int aux = r.nextInt(8) + 1;
+        int aux = r.nextInt(100) + 1;
         //int aux = r.nextInt(16) + 1;
 
         return aux;

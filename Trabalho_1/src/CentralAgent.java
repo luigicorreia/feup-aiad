@@ -206,6 +206,7 @@ public class CentralAgent extends Agent {
                 list.add(tokens[0]);
                 list.add(tokens[1]);
                 list.add(tokens[2]);
+                list.add(tokens[4]);
                 list.add(tokens[3]);
 
                 if (i == id2)
@@ -272,6 +273,14 @@ public class CentralAgent extends Agent {
                     }
 
                     aux = tokens[2];
+
+                    if (aux.length() <= 2){
+                        res = res +  "      " + aux + "     |";
+                    }else if (aux.length() > 2){
+                        res = res +  "     " + aux + "    |";
+                    }
+
+                    aux = tokens[4];
 
                     if (aux.length() <= 2){
                         res = res +  "      " + aux + "     |";
@@ -356,15 +365,15 @@ public class CentralAgent extends Agent {
 
             for(int i = 0; i < tokens.size(); i++) {
                 if (tokens.get(i)[3].equals("true")){
-                    int num = Integer.parseInt(tokens.get(i)[1]);
+                    int num = Integer.parseInt(tokens.get(i)[4]);
 
                     if(num < min && getPatientIllness().equals(tokens.get(i)[0])) {
-                        min = Integer.parseInt(tokens.get(i)[1]);
+                        min = Integer.parseInt(tokens.get(i)[4]);
                         id = i;
                     }
 
                     if(num < min2op){
-                        min2op = Integer.parseInt(tokens.get(i)[1]);
+                        min2op = Integer.parseInt(tokens.get(i)[4]);
                         id2op = i;
                     }
 

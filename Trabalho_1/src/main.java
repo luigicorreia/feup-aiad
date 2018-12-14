@@ -59,85 +59,64 @@ public class main {
         PatientControl pc = new PatientControl();
 
         // Hospital Agents
-        AgentController h1,h2,h3,h4,h5, h6, h7, h8, h9, h10;
+        Vector<AgentController> hospitalAgents = new Vector<AgentController>();
 
         //Patient Agents
-        AgentController p1, p2, p3, p4, p5, p6, p7, p8, p9, p10;
-
-
+        Vector<AgentController> patientAgents = new Vector<AgentController>();
 
         //Ambulance Agents
-        AgentController a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11;
+        Vector<AgentController> ambulanceAgents = new Vector<AgentController>();
 
         //Central Agent
         AgentController c1, c2;
 
 
         try {
-            h1 = acHospitals.createNewAgent("h1", "HospitalAgent", args); // Hospital Agent
-            h2 = acHospitals.createNewAgent("h2", "HospitalAgent", args); // Hospital Agent
-            h3 = acHospitals.createNewAgent("h3", "HospitalAgent", args); // Hospital Agent
-            h4 = acHospitals.createNewAgent("h4", "HospitalAgent", args); // Hospital Agent
-            h5 = acHospitals.createNewAgent("h5", "HospitalAgent", args); // Hospital Agent
-            h6 = acHospitals.createNewAgent("h6", "HospitalAgent", args); // Hospital Agent
-            h7 = acHospitals.createNewAgent("h7", "HospitalAgent", args); // Hospital Agent
-            h8 = acHospitals.createNewAgent("h8", "HospitalAgent", args); // Hospital Agent
-            h9 = acHospitals.createNewAgent("h9", "HospitalAgent", args); // Hospital Agent
-            h10 = acHospitals.createNewAgent("h10", "HospitalAgent", args); // Hospital Agent
 
+            //CREATE HOSPITAL AGENTS
+            for (int i = 0; i < 100; i++) {
+                int i2 = i+1;
+                String agentName = "h" + i2;
 
+                hospitalAgents.add(acHospitals.createNewAgent(agentName, "HospitalAgent", args));
 
-            p1 = acPatients.createNewAgent("p1", "PatientAgent", args); // Patient Agent
-            p2 = acPatients.createNewAgent("p2", "PatientAgent", args); // Patient Agent
-            p3 = acPatients.createNewAgent("p3", "PatientAgent", args); // Patient Agent
-            p4 = acPatients.createNewAgent("p4", "PatientAgent", args); // Patient Agent
-            p5 = acPatients.createNewAgent("p5", "PatientAgent", args); // Patient Agent
+            }
 
+            //CREATE PATIENT AGENTS
+
+            for(int i=0; i < 100; i++) {
+                int i2 = i+1;
+                String agentName = "p" + i2;
+
+                patientAgents.add(acPatients.createNewAgent(agentName, "PatientAgent", args));
+            }
 
             c1 = acCentral.createNewAgent("c", "CentralAgent", args);
 
-            a1 = acAmbulances.createNewAgent("a1", "AmbulanceAgent", args); //Ambulance Agent
-            a2 = acAmbulances.createNewAgent("a2", "AmbulanceAgent", args); //Ambulance Agent
-            a3 = acAmbulances.createNewAgent("a3", "AmbulanceAgent", args); //Ambulance Agent
-            a4 = acAmbulances.createNewAgent("a4", "AmbulanceAgent", args); //Ambulance Agent
-            a5 = acAmbulances.createNewAgent("a5", "AmbulanceAgent", args); //Ambulance Agent
-            a6 = acAmbulances.createNewAgent("a6", "AmbulanceAgent", args); //Ambulance Agent
-            a7 = acAmbulances.createNewAgent("a7", "AmbulanceAgent", args); //Ambulance Agent
-            a8 = acAmbulances.createNewAgent("a8", "AmbulanceAgent", args); //Ambulance Agent
-            a9 = acAmbulances.createNewAgent("a9", "AmbulanceAgent", args); //Ambulance Agent
-            a10 = acAmbulances.createNewAgent("a10", "AmbulanceAgent", args); //Ambulance Agent
-            a11 = acAmbulances.createNewAgent("a11", "AmbulanceAgent", args); //Ambulance Agent
+            //CREATE AMBULANCE AGENTS
+            for (int i = 0; i < 100; i++) {
+                int i2 = i+1;
+                String agentName = "a" + i2;
+
+                ambulanceAgents.add(acAmbulances.createNewAgent(agentName, "AmbulanceAgent", args)); //Ambulance Agent
+
+            }
 
 
             c1.start();
 
+            //START HOSPITAL AGENTS
+            for(int i = 0; i < hospitalAgents.size(); i++) {
+                hospitalAgents.get(i).start();
+            }
 
+            //START AMBULANCE AGENTS
+            for(int i = 0; i < ambulanceAgents.size(); i++) {
+                ambulanceAgents.get(i).start();
+            }
 
-            h1.start();
-            h2.start();
-            h3.start();
-            h4.start();
-            h5.start();
-
-            a1.start();
-            a2.start();
-            a3.start();
-            a4.start();
-            a5.start();
-
-
-            Vector<AgentController> patients = new Vector();
-
-            patients.add(p1);
-            patients.add(p2);
-            patients.add(p3);
-//            patients.add(p4);
-//            patients.add(p5);
-
-            pc.schedulePatient(patients);
-//            p2.start();
-//            p3.start();
-//            p4.start();
+            //START PATIENT AGENTS
+            pc.schedulePatient(patientAgents);
 
 
 

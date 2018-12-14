@@ -135,7 +135,7 @@ public class AmbulanceAgent extends Agent{
     public int calculateCoordinate(){
         Random r = new Random();
         //int aux = r.nextInt(4) + 1;
-        int aux = r.nextInt(8) + 1;
+        int aux = r.nextInt(100) + 1;
         //int aux = r.nextInt(16) + 1;
 
         return aux;
@@ -194,7 +194,7 @@ public class AmbulanceAgent extends Agent{
             return v;
         }
 
-        public void writeData(Vector<String> names, int id, Vector<Integer> hospitalXPositions, Vector<Integer> hospitalYPositions) throws IOException {
+        public void writeData(Vector<String> names, int id, Vector<Integer> hospitalXPositions, Vector<Integer> hospitalYPositions, Vector<Integer> dist) throws IOException {
 
             String csvFile = "data.csv";
             FileWriter writer = new FileWriter(csvFile, true);
@@ -206,6 +206,7 @@ public class AmbulanceAgent extends Agent{
 
                 Info.info.get(i).add(Integer.toString(hospitalXPositions.get(i)));
                 Info.info.get(i).add(Integer.toString(hospitalYPositions.get(i)));
+                Info.info.get(i).add(Integer.toString(dist.get(i)));
 
 
 
@@ -217,12 +218,6 @@ public class AmbulanceAgent extends Agent{
                 CSVUtils.writeLine(writer, Info.info.get(i), true);
 
             }
-
-
-
-//            for(int i = 0; i < Info.info.size(); i++){
-//                CSVUtils.writeLine(writer, Info.info.get(i), true);
-//            }
 
             writer.close();
             Info.info.clear();
@@ -240,13 +235,16 @@ public class AmbulanceAgent extends Agent{
             Vector<String> hospitalNames = new Vector<>();
             Vector<Integer> hospitalXPositions = new Vector<Integer>();
             Vector<Integer> hospitalYPositions = new Vector<Integer>();
+            Vector<Integer> hospitalDistances = new Vector<>();
+            Vector<String[]> newTokensVector = new Vector<>();
+
             int id;
             String hospitalStatus = "";
 
             try {
                 System.out.println("Hospital data:");
                 System.out.println("");
-                System.out.println("| name | specialisty | position x | position y | distance |");
+                System.out.println("| name | specialty | position x | position y | distance |");
                 System.out.println("|------|-------------|------------|------------|----------|");
 
                 for (int i = 0; i < responses.size(); i++) {
@@ -259,7 +257,13 @@ public class AmbulanceAgent extends Agent{
 
                     int dist = calculateDistance(getPatientX(), getPatientY(), i1, i2);
 
+                    String newHospitalInfo = hospitalInfo + "-" + Integer.toString(dist);
+
+                    String [] newTokens = newHospitalInfo.split("-");
+
                     allTokens.add(tokens);
+
+                    newTokensVector.add(newTokens);
 
                     String res = "";
                     String aux = ((ACLMessage) responses.get(i)).getSender().getLocalName();
@@ -267,6 +271,7 @@ public class AmbulanceAgent extends Agent{
 
                     hospitalXPositions.add(i1);
                     hospitalYPositions.add(i2);
+                    hospitalDistances.add(dist);
 
                     if (aux.length() == 2){
                         res = "|  " + aux + "  |";
@@ -311,7 +316,7 @@ public class AmbulanceAgent extends Agent{
                 e.printStackTrace();
             }
 
-            id = analyzeInfo(allTokens);
+            id = analyzeInfo(newTokensVector);
 
 
 
@@ -328,7 +333,7 @@ public class AmbulanceAgent extends Agent{
             }
 
            try {
-                writeData(hospitalNames, id, hospitalXPositions, hospitalYPositions);
+                writeData(hospitalNames, id, hospitalXPositions, hospitalYPositions,hospitalDistances);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -346,15 +351,15 @@ public class AmbulanceAgent extends Agent{
             int id2op = 0;
 
             for(int i = 0; i < tokens.size(); i++) {
-                int num = Integer.parseInt(tokens.get(i)[1]);
+                int num = Integer.parseInt(tokens.get(i)[3]);
 
                 if(num < min && getIllness().equals(tokens.get(i)[0]) ) {
-                    min = Integer.parseInt(tokens.get(i)[1]);
+                    min = Integer.parseInt(tokens.get(i)[3]);
                     id = i;
                 }
 
                 if(num < min2op){
-                    min2op = Integer.parseInt(tokens.get(i)[1]);
+                    min2op = Integer.parseInt(tokens.get(i)[3]);
                     id2op = i;
                 }
             }
